@@ -1,0 +1,152 @@
+@use "../../themes/variables" as *;
+@use "../../themes/colors" as *;
+
+.Sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  &__shopName {
+    font-size: $font-size-medium;
+    min-width: 230px;
+  }
+
+  &__menu {
+    display: flex;
+    height: 100%;
+  }
+
+  &__narrow {
+    flex: 1;
+    max-width: 50px;
+    height: 100%;
+    padding: 2px 1px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-top: 1px solid $neutrals_05;
+    border-right: 1px solid $neutrals_05;
+    min-width: calc($sidebar-width / 5);
+  }
+
+  &__expand {
+    flex: 5;
+    height: 100%;
+    width: 100%;
+    border-top: 1px solid $neutrals_05;
+    overflow: hidden;
+
+    &.expanded {
+      width: 100%;
+      animation-name: expand;
+      animation-delay: 0;
+      animation-duration: 0.5s;
+    }
+
+    &.collapsed {
+      width: 0;
+      animation-name: collapse;
+      animation-delay: 0;
+      animation-duration: 0.5s;
+    }
+
+    &-title {
+      font-size: $font-size-large;
+      background-color: $neutrals_10;
+      min-width: 192px;
+      padding: 8px 16px;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    padding: 12px 10px;
+    gap: 16px;
+    align-items: center;
+  }
+
+  &__el {
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    flex-direction: column;
+    min-height: 45px;
+    padding: 4px 2px;
+
+    &.active {
+      background-color: $red_08;
+    }
+
+    &:hover {
+      background-color: $red_08;
+      cursor: pointer;
+    }
+
+    &-name {
+      font-size: $font-size-small;
+    }
+    &-icon {
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  &__list-children {
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    border-radius: 2px;
+    padding: 4px 8px;
+    gap: 6px;
+
+    &-name {
+      min-width: 192px;
+    }
+
+    &:hover {
+      background-color: $red_08;
+      cursor: pointer;
+    }
+
+    &.active {
+      background-color: $red_08;
+    }
+  }
+}
+@keyframes collapse {
+  0% {
+    width: 200px;
+  }
+  100% {
+    width: 50px;
+  }
+}
+
+@keyframes expand {
+  0% {
+    width: 50px;
+  }
+  100% {
+    width: 200px;
+  }
+}
+
+.displayNone {
+  display: none;
+}
+
+.display {
+  display: block;
+}

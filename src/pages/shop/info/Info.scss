@@ -1,0 +1,254 @@
+@use "../../../themes/variables" as *;
+@use "../../../themes/colors" as *;
+
+.InformationPage {
+  display: flex;
+}
+
+.Config {
+  flex: 4;
+  margin-right: 30px;
+  .Information {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 12px;
+
+    .Shop {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      background-color: $white;
+      border-radius: 6px;
+      &__name {
+        font-size: $font-size-large;
+        display: flex;
+        font-weight: bold;
+      }
+
+      &__other {
+        display: flex;
+
+        &-phone {
+          margin-right: 4px;
+        }
+      }
+
+      &__address {
+        text-align: center;
+      }
+
+      &__image {
+        img {
+          width: 100px;
+          height: 100px;
+        }
+      }
+
+      &__title {
+        font-size: $font-size-medium;
+        padding: 12px 16px;
+        border-bottom: 1px solid $neutrals_03;
+      }
+
+      &__contents {
+        padding: 12px 16px;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: $neutrals_07;
+        gap: 16px;
+      }
+
+      &__edit {
+        border-top: 1px solid $neutrals_03;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px;
+        cursor: pointer;
+
+        &-icon {
+          width: 16px;
+          height: 16px;
+          margin-bottom: 2px;
+        }
+
+        &:hover {
+          text-decoration: underline;
+          color: $blue_08;
+        }
+      }
+    }
+
+    .Bank {
+      flex: 1;
+      background-color: $white;
+      border-radius: 6px;
+
+      &__title {
+        padding: 12px 16px;
+        font-size: $font-size-medium;
+        border-bottom: 1px solid $neutrals_03;
+      }
+
+      &__item {
+        display: flex;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 1px solid $neutrals_03;
+
+        &-image {
+          padding: 8px 12px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          img {
+            text-align: center;
+            width: 200px;
+            height: 100%;
+          }
+        }
+
+        &-label {
+          min-width: 100px;
+        }
+
+        &-value {
+          font-weight: bold;
+        }
+      }
+
+      &__contents {
+        padding: 0px 16px;
+      }
+
+      &__edit {
+        border-top: 1px solid $neutrals_03;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px;
+        cursor: pointer;
+
+        &-icon {
+          width: 16px;
+          height: 16px;
+          margin-bottom: 2px;
+        }
+
+        &:hover {
+          text-decoration: underline;
+          color: $blue_08;
+        }
+      }
+    }
+  }
+
+  .Domain {
+    background-color: $white;
+    border-radius: 6px;
+    &__title {
+      padding: 12px 16px;
+      font-size: $font-size-medium;
+      border-bottom: 1px solid $neutrals_03;
+    }
+
+    &__contents {
+      padding: 12px 16px;
+    }
+  }
+}
+
+.NewProducts {
+  flex: 2;
+  background-color: $white;
+  border-radius: 6px;
+
+  &__title {
+    font-size: $font-size-medium;
+    padding: 12px 16px;
+    border-bottom: 1px solid $neutrals_03;
+  }
+
+  &__contents {
+    padding: 0 16px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+  &__item {
+    border-bottom: 1px solid $neutrals_04;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-evenly;
+
+    &-name {
+      font-weight: bold;
+      color: $blue_08;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.6;
+        text-decoration: underline;
+      }
+    }
+
+    &-info {
+      flex: 1;
+      padding: 8px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    &-prices {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    &-old-price {
+      font-weight: bold;
+      background-color: $neutrals_05;
+      text-align: center;
+      border-radius: 8px;
+      padding: 4px 8px;
+      text-decoration: line-through;
+    }
+
+    &-discount {
+      color: $neutrals_05;
+      font-weight: bold;
+    }
+
+    &-price {
+      color: $white;
+      font-weight: bold;
+      padding: 4px 8px;
+      background-color: $red_09;
+      border-radius: 8px;
+    }
+
+    &-image {
+      img {
+        width: 60px;
+        height: 70px;
+      }
+    }
+  }
+  &__other {
+    padding: 16px;
+    text-align: center;
+    text-decoration: underline;
+    color: $blue_09;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+}

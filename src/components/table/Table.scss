@@ -1,0 +1,79 @@
+@use "../../themes/variables" as *;
+@use "../../themes/colors" as *;
+
+.Product__table {
+  .product-image {
+    padding: 6px 6px;
+    img {
+      width: 48px;
+      height: 55px;
+      border-radius: 4px;
+    }
+  }
+
+  .product-name {
+    font-weight: bold;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      color: $blue_09;
+    }
+  }
+
+  .product-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 12px;
+    &-label {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
+      border-radius: 4px;
+      color: $white;
+      font-weight: bold;
+      font-size: $font-size-small;
+
+      &.active {
+        background-color: $green_10;
+      }
+
+      &.noActive {
+        background-color: $red_10;
+      }
+    }
+  }
+
+  .product-collection {
+    color: $blue_09;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .MuiDataGrid-cell {
+    height: 66px !important;
+  }
+
+  .MuiDataGrid-row--lastVisible {
+  }
+
+  .MuiDataGrid-row {
+    min-height: 66px !important;
+  }
+
+  .MuiDataGrid-filler {
+    display: none;
+  }
+}
+
+.Table {
+  //   max-width: calc(100vw - $sidebar-width - 80px);
+
+  .MuiDataGrid-virtualScrollerContent {
+    min-height: 1320px;
+  }
+}

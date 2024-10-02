@@ -1,0 +1,10 @@
+@use "../../themes/colors" as *;
+.Checkbox {
+  padding: 0 !important;
+
+  .MuiSvgIcon-root {
+    width: 20px !important;
+    height: 20px !important;
+    color: $neutrals_12;
+  }
+}
