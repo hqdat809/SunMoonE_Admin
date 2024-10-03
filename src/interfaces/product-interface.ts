@@ -17,7 +17,7 @@ export interface IProductRequest {
   includeQuantity?: boolean; //có lấy thông tin định mức tồn
   productType?: boolean; //loại hàng hóa
   includeMaterial?: boolean; //có lấy danh sách hàng thành phần
-  isActive?: boolean; //Hàng đang kinh doanh,
+  isActive?: boolean | null; //Hàng đang kinh doanh,
   name?: string; //search hàng hóa theo tên
   includeSoftDeletedAttribute?: boolean; //Có lấy thông tin danh sách thuộc tính bị xóa của hàng hóa (mặc định là true nếu không truyền tham số này => Nghĩa là lấy tất cả thuộc tính bao gồm thuộc tính đã bị xóa. Ngược lại nếu = false thì loại bỏ các thuộc tính đã bị xóa).
   tradeMarkId?: number; //Id thương hiệu cần filter

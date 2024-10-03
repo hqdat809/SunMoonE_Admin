@@ -11,13 +11,10 @@ interface ITableProps {
   setSelection?: (selection: any[]) => void;
   className?: string;
   total?: number;
-  numberpage?: number;
-  currentItem?: number;
-  setCurrentItem?: (item: number) => void;
   pageSize?: number;
 }
 
-export default function Table({
+const Table = ({
   setSelection,
   rows,
   columns,
@@ -25,12 +22,15 @@ export default function Table({
   notCheckBoxSelection,
   className,
   total,
-  numberpage,
-  setCurrentItem,
-  currentItem,
   pageSize,
-}: ITableProps) {
-  if (!total) {
+}: ITableProps) => {
+  const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [rows]);
+
+  if (total === undefined) {
     return (
       <div style={{ height: "100%", width: "100%", maxWidth: "100%" }}>
         ...Loading
@@ -50,15 +50,11 @@ export default function Table({
             paginationModel: { page: 0, pageSize: pageSize },
           },
         }}
-        onPaginationModelChange={(model) => {
-          console.log("model", model);
-          if (model.page === 0) {
-            setCurrentItem?.(0);
-          } else {
-            setCurrentItem?.(model.page * model.pageSize + 1);
-          }
-        }}
+        paginationModel={{ page: currentPage, pageSize: pageSize || 0 }}
         disableRowSelectionOnClick
+        onPaginationModelChange={(event) => {
+          setCurrentPage(event.page);
+        }}
         onRowSelectionModelChange={(ids) => {
           const selectedRowsData = ids.map((id) =>
             rows?.find((row) => row.id === id)
@@ -70,4 +66,6 @@ export default function Table({
       />
     </div>
   );
-}
+};
+
+export default Table;
