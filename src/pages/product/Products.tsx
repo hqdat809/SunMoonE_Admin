@@ -31,7 +31,9 @@ const Products = () => {
   const [total, setTotal] = useState<number | undefined>(0);
   const [currentItem, setCurrentItem] = useState(0);
   const [status, setStatus] = useState<boolean>();
-  const [filteredProduct, setFilteredProduct] = useState<IProductResponse[]>();
+  const [filteredProduct, setFilteredProduct] = useState<
+    IProductResponse[] | undefined
+  >(undefined);
   const [selectedProduct, setSelectedProduct] = useState<IProductResponse[]>(
     []
   );
@@ -71,7 +73,7 @@ const Products = () => {
       currentItem: currentItem,
     };
     productService
-      .getProducts(payload, () => {})
+      .getProducts(payload)
       .then((res: IKiotResponse<IProductResponse> | undefined) => {
         if (res && products) {
           const newData = [...products, ...res.data];
@@ -92,30 +94,32 @@ const Products = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    let newData: IProductResponse[] = [];
-    if (status !== undefined) {
-      const filteredData = products.filter((p) => p.isActive === status);
-      newData = filteredData;
-    } else {
-      newData = products;
+    if (products.length > 0) {
+      setLoading(true);
+      let newData: IProductResponse[] = [];
+      if (status !== undefined) {
+        const filteredData = products.filter((p) => p.isActive === status);
+        newData = filteredData;
+      } else {
+        newData = products;
+      }
+
+      if (categoryId !== "default" && categoryId) {
+        const filteredData = newData.filter(
+          (p) => p.categoryId === parseInt(categoryId)
+        );
+        newData = filteredData;
+      }
+
+      console.log("newData: ", newData);
+      console.log("products: ", products);
+
+      setFilteredProduct(newData);
+      setTotal(newData.length);
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
-
-    if (categoryId !== "default" && categoryId) {
-      const filteredData = newData.filter(
-        (p) => p.categoryId === parseInt(categoryId)
-      );
-      newData = filteredData;
-    }
-
-    console.log("newData: ", newData);
-    console.log("products: ", products);
-
-    setFilteredProduct(newData);
-    setTotal(newData.length);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
   }, [status, categoryId]);
 
   useEffect(() => {
@@ -124,7 +128,7 @@ const Products = () => {
     } else {
       setTimeout(() => {
         setLoading(false);
-      }, 1000);
+      }, 200);
     }
   }, [products]);
 
@@ -137,7 +141,7 @@ const Products = () => {
   const renderProduct = () => {
     if (filteredProduct === undefined) {
       return products;
-    } else if (filteredProduct.length === 0) {
+    } else if (filteredProduct && filteredProduct.length === 0) {
       return filteredProduct;
     } else {
       return filteredProduct;
@@ -218,7 +222,7 @@ const Products = () => {
               total={total}
               pageSize={20}
               columns={productColumns}
-              rows={filteredProduct === undefined ? products : filteredProduct}
+              rows={renderProduct()}
               setSelection={setSelectedProduct}
               className="Product__table"
             />

@@ -28,6 +28,7 @@ const Table = ({
 
   useEffect(() => {
     setCurrentPage(0);
+    console.log(rows);
   }, [rows]);
 
   if (total === undefined) {
