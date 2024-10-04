@@ -42,6 +42,10 @@ const Info = () => {
     navigate(RoutePath.EDIT_SHOP);
   };
 
+  const handleNavigateProductPage = () => {
+    navigate(RoutePath.PRODUCTS);
+  };
+
   return (
     <div className="page-container">
       <div className="page-title">Thông tin cửa hàng</div>
@@ -151,7 +155,12 @@ const Info = () => {
                 </div>
               ))}
             </div>
-            <div className="NewProducts__other">Xem tất cả sản phẩm</div>
+            <div
+              className="NewProducts__other"
+              onClick={handleNavigateProductPage}
+            >
+              Xem tất cả sản phẩm
+            </div>
           </div>
         </div>
       </div>

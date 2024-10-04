@@ -3,7 +3,9 @@ import noProductImage from "../../assets/image/no-product-image.png";
 import { IProductResponse } from "../../interfaces/product-interface";
 import "./Table.scss";
 import Checkbox from "../check-box/Checkbox";
-import { Switch } from "@mui/material";
+import { Switch, Tooltip } from "@mui/material";
+import { ICustomer } from "../../interfaces/customer-interface";
+import { formatDate } from "../../utils/date-utils";
 
 export const productColumns: GridColDef[] = [
   {
@@ -71,6 +73,65 @@ export const productColumns: GridColDef[] = [
           name="loading"
           color="primary"
         />
+      </div>
+    ),
+  },
+];
+
+export const customerColumns: GridColDef[] = [
+  {
+    field: "id",
+    headerName: "ID",
+    flex: 1,
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <div className="customer-id">{params.row?.id}</div>
+    ),
+  },
+  {
+    field: "name",
+    headerName: "TÊN",
+    flex: 1,
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <div className="customer-name">{params.row?.name}</div>
+    ),
+  },
+  {
+    field: "code",
+    flex: 1,
+    headerName: "MÃ",
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <div className="customer-code">{params.row?.code}</div>
+    ),
+  },
+  {
+    field: "contactNumber",
+    headerName: "SỐ ĐIỆN THOẠI",
+    flex: 1,
+    width: 240,
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <div className="customer-contactNumber">{params.row?.contactNumber}</div>
+    ),
+  },
+
+  {
+    field: "address",
+    headerName: "ĐỊA CHỈ",
+    flex: 3,
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <Tooltip
+        title={`${params.row?.address}, ${params.row?.wardName}, ${params.row?.locationName}`}
+      >
+        <div className="customer-address">{`${params.row?.address}, ${params.row?.wardName}, ${params.row?.locationName}`}</div>
+      </Tooltip>
+    ),
+  },
+  {
+    field: "createdDate",
+    headerName: "NGÀY TẠO",
+    flex: 1,
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <div className="customer-createdDate">
+        {formatDate(`${params.row?.createdDate}`)}
       </div>
     ),
   },

@@ -1,5 +1,5 @@
 import { MenuItem, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/table/Table";
 import { productColumns } from "../../components/table/table-data";
 import { ICollections } from "../../interfaces/collection-interface";
@@ -9,6 +9,7 @@ import * as collectionServices from "../../services/collection-service";
 import * as productService from "../../services/product-service";
 import "./Products.scss";
 import CircularProgress from "@mui/material/CircularProgress";
+import * as _ from "lodash";
 
 const listStatus: ISelectOptions[] = [
   {
@@ -38,6 +39,7 @@ const Products = () => {
     []
   );
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState();
   const [categoryId, setCategoryId] = useState<string>("");
 
   const convertToSelectOptions = (data: ICollections[]) => {
@@ -65,13 +67,37 @@ const Products = () => {
     return result;
   };
 
+  const handleInputSearchText = (values: string) => {
+    setProducts([]);
+    setFilteredProduct(undefined);
+    setCurrentItem(0);
+    debouncedFetch(values);
+  };
+
+  const debouncedFetch = useCallback(
+    _.debounce((values) => setSearchText(values), 1000), // 500ms debounce
+    []
+  );
+
   const handleGetProducts = () => {
-    const payload = {
-      orderDirection: "DESC",
-      orderBy: "createdDate",
-      pageSize: 200,
-      currentItem: currentItem,
-    };
+    let payload = null;
+    if (searchText) {
+      payload = {
+        orderDirection: "DESC",
+        orderBy: "createdDate",
+        pageSize: 200,
+        currentItem: currentItem,
+        name: searchText,
+      };
+    } else {
+      payload = {
+        orderDirection: "DESC",
+        orderBy: "createdDate",
+        pageSize: 200,
+        currentItem: currentItem,
+      };
+    }
+
     productService
       .getProducts(payload)
       .then((res: IKiotResponse<IProductResponse> | undefined) => {
@@ -83,6 +109,9 @@ const Products = () => {
           setCurrentItem(currentItem + 200);
         }
       });
+    setTimeout(() => {
+      setLoading(false);
+    }, 200);
   };
 
   const handleGetCollections = () => {
@@ -92,6 +121,13 @@ const Products = () => {
         setCollections(convertToSelectOptions(data?.data || []));
       });
   };
+
+  useEffect(() => {
+    if (searchText != undefined) {
+      setLoading(true);
+      handleGetProducts();
+    }
+  }, [searchText]);
 
   useEffect(() => {
     if (products.length > 0) {
@@ -166,6 +202,7 @@ const Products = () => {
                 label="Tìm kiếm"
                 variant="outlined"
                 size="small"
+                onChange={(e) => handleInputSearchText(e.target.value)}
               />
             </div>
             <div className="Products__filter-item">

@@ -68,12 +68,11 @@
   .MuiDataGrid-filler {
     display: none;
   }
+  .MuiDataGrid-virtualScrollerContent {
+    min-height: 1320px;
+  }
 }
 
 .Table {
   //   max-width: calc(100vw - $sidebar-width - 80px);
-
-  .MuiDataGrid-virtualScrollerContent {
-    min-height: 1320px;
-  }
 }
