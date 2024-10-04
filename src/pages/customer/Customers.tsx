@@ -1,6 +1,16 @@
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
-import { InputAdornment, MenuItem, TextField } from "@mui/material";
+import {
+  CircularProgress,
+  InputAdornment,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import "./Customers.scss";
+import { useEffect, useState } from "react";
+import * as customerService from "../../services/customer-service";
+import { ICustomer } from "../../interfaces/customer-interface";
+import { customerColumns } from "../../components/table/table-data";
+import Table from "../../components/table/Table";
 const listRank = [
   {
     value: "default",
@@ -91,80 +101,60 @@ const listPrice = [
 ];
 
 const Customers = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState(0);
+  const [customers, setCustomers] = useState<ICustomer[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<ICustomer[]>();
+  const [currentItem, setCurrentItem] = useState(0);
+
+  const handleGetCustomer = () => {
+    customerService
+      .getCustomerFromKiot({ pageSize: 200, currentItem: currentItem })
+      .then((res) => {
+        if (res) {
+          const newData = [...customers, ...res.data];
+          console.log("res api data: ", res);
+          setCustomers(newData);
+          setTotal(res.total);
+          setCurrentItem(currentItem + 200);
+          if (currentItem >= res.total - 200) {
+            setLoading(false);
+          }
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (total && currentItem < total && currentItem > 0) {
+      handleGetCustomer();
+    }
+  }, [customers]);
+
+  useEffect(() => {
+    setLoading(true);
+    handleGetCustomer();
+  }, []);
+
   return (
     <div className="page-container">
       <div className="page-title">Danh sách khách hàng</div>
       <div className="page-contents">
-        <div className="Customer">
-          <div className="Customer__filter">
-            <div className="Customer__filter-item">
-              <TextField
-                id="outlined-basic"
-                label="Tìm kiếm"
-                variant="outlined"
-                size="small"
-              />
-            </div>
-            <div className="Customer__filter-item">
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Hạng thành viên"
-                size="small"
-                defaultValue="default"
-                helperText=""
-              >
-                {listRank.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className="Customer__filter-item">
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Bảng giá"
-                size="small"
-                defaultValue="default"
-                helperText=""
-              >
-                {listPrice.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-
-            <div className="Customer__filter-item">
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Ngày tạo"
-                size="small"
-                defaultValue="default"
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <CalendarMonthRoundedIcon />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                helperText=""
-              >
-                {listCreatedDate.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
+        {loading && (
+          <div className="layout-loading">
+            <CircularProgress size="3rem" />
           </div>
-          <div className="Customer__table"></div>
+        )}
+        <div className="Customer">
+          <div className="">
+            <Table
+              total={total}
+              pageSize={25}
+              columns={customerColumns}
+              rows={customers}
+              setSelection={setSelectedCustomer}
+              className="Customer__table"
+            />
+          </div>
         </div>
       </div>
     </div>
