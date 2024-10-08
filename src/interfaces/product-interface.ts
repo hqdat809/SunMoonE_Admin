@@ -24,7 +24,6 @@ export interface IProductRequest {
 }
 
 export interface IProductResponse {
-  createdDate: Date;
   id: number;
   retailerId: number;
   code: string;
@@ -39,9 +38,10 @@ export interface IProductResponse {
   basePrice: number;
   weight: number;
   conversionValue: number;
-  modifiedDate: Date;
   isActive: boolean;
   isLotSerialControl: boolean;
   isBatchExpireControl: boolean;
   images: string[];
+  modifiedDate: Date;
+  createdDate: Date;
 }

@@ -12,9 +12,21 @@
   flex-direction: column;
 }
 
-.page-title {
-  height: 30px;
-  font-size: 26px;
+.page-header {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &-title {
+    height: 30px;
+    font-size: 26px;
+  }
+
+  &-actions {
+    .add-action {
+    }
+  }
 }
 
 .page-contents {

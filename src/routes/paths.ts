@@ -8,4 +8,5 @@ export const ORDERS = "/orders";
 
 export const CUSTOMERS = "/customers";
 
-export const PRODUCTS = "/products";
+export const PRODUCTS = "products";
+export const PRODUCTS_CREATE = "create";

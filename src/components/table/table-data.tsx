@@ -6,6 +6,7 @@ import Checkbox from "../check-box/Checkbox";
 import { Switch, Tooltip } from "@mui/material";
 import { ICustomer } from "../../interfaces/customer-interface";
 import { formatDate } from "../../utils/date-utils";
+import CategoryCustomer from "../../pages/product/categoryCustomer/CategoryCustomer";
 
 export const productColumns: GridColDef[] = [
   {
@@ -40,7 +41,7 @@ export const productColumns: GridColDef[] = [
   {
     field: "categoryName",
     headerName: "DANH MỤC",
-    flex: 3,
+    flex: 2,
     width: 240,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-collection">{params.row?.categoryName}</div>
@@ -55,11 +56,11 @@ export const productColumns: GridColDef[] = [
     ),
   },
   {
-    field: "conversionValue",
-    headerName: "ĐƠN VỊ",
+    field: "categoryId",
+    headerName: "Khách hàng",
     flex: 1,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
-      <div className="product-conversion">{params.row?.conversionValue}</div>
+      <CategoryCustomer categoryId={params.row?.categoryId} />
     ),
   },
   {
@@ -105,7 +106,7 @@ export const customerColumns: GridColDef[] = [
   },
   {
     field: "contactNumber",
-    headerName: "SỐ ĐIỆN THOẠI",
+    headerName: "SĐT",
     flex: 1,
     width: 240,
     renderCell: (params: GridRenderCellParams<ICustomer>) => (
@@ -121,7 +122,7 @@ export const customerColumns: GridColDef[] = [
       <Tooltip
         title={`${params.row?.address}, ${params.row?.wardName}, ${params.row?.locationName}`}
       >
-        <div className="customer-address">{`${params.row?.address}, ${params.row?.wardName}, ${params.row?.locationName}`}</div>
+        <div className="customer-address">{`${params.row?.address} - ${params.row?.wardName} - ${params.row?.locationName}`}</div>
       </Tooltip>
     ),
   },
