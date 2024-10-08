@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from "@mui/material";
+import { Button, MenuItem, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/table/Table";
 import { productColumns } from "../../components/table/table-data";
@@ -10,6 +10,8 @@ import * as productService from "../../services/product-service";
 import "./Products.scss";
 import CircularProgress from "@mui/material/CircularProgress";
 import * as _ from "lodash";
+import { useNavigate } from "react-router-dom";
+import * as RoutePaths from "../../routes/paths";
 
 const listStatus: ISelectOptions[] = [
   {
@@ -27,6 +29,8 @@ const listStatus: ISelectOptions[] = [
 ];
 
 const Products = () => {
+  const navigate = useNavigate();
+
   const [collections, setCollections] = useState<ISelectOptions[]>([]);
   const [products, setProducts] = useState<IProductResponse[]>([]);
   const [total, setTotal] = useState<number | undefined>(0);
@@ -41,8 +45,12 @@ const Products = () => {
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState();
   const [categoryId, setCategoryId] = useState<string>("");
+  const [parentId, setParentId] = useState<string>("");
+  const [collectionCustomer, setCollectionCustomer] = useState<
+    ISelectOptions[]
+  >([]);
 
-  const convertToSelectOptions = (data: ICollections[]) => {
+  const convertToSelectOptions = (data: ICollections[], getChildren = true) => {
     const result: ISelectOptions[] = [
       {
         value: "default",
@@ -55,7 +63,7 @@ const Products = () => {
         value: d.categoryId,
         label: d.categoryName,
       });
-      if (d.children && d.children.length > 0) {
+      if (d.children && d.children.length > 0 && getChildren) {
         d.children.map((c: ICollections) => {
           result.push({
             value: c.categoryId,
@@ -118,8 +126,36 @@ const Products = () => {
     collectionServices
       .getCollections({ hierachicalData: true, pageSize: 100 })
       .then((data) => {
+        localStorage.setItem("collections", JSON.stringify(data?.data));
         setCollections(convertToSelectOptions(data?.data || []));
+        setCollectionCustomer(convertToSelectOptions(data?.data || [], false));
       });
+  };
+
+  const handleNavigateCreateProductPage = () => {
+    navigate(RoutePaths.PRODUCTS_CREATE);
+  };
+
+  const handleChangeCategoryCustomer = (parentId: number) => {
+    const collections: ICollections[] = JSON.parse(
+      localStorage.getItem("collections") || ""
+    );
+
+    console.log(parentId);
+
+    const childrenCollections: ICollections[] | undefined = collections.find(
+      (collect) => collect.categoryId == parentId
+    )?.children;
+
+    const childrenCollectionsId = childrenCollections?.map(
+      (collect) => collect.categoryId
+    );
+
+    const newData = renderProduct().filter((product) =>
+      childrenCollectionsId?.includes(product.categoryId)
+    );
+
+    setFilteredProduct(newData);
   };
 
   useEffect(() => {
@@ -133,6 +169,8 @@ const Products = () => {
     if (products.length > 0) {
       setLoading(true);
       let newData: IProductResponse[] = [];
+
+      // filter status field
       if (status !== undefined) {
         const filteredData = products.filter((p) => p.isActive === status);
         newData = filteredData;
@@ -140,11 +178,34 @@ const Products = () => {
         newData = products;
       }
 
+      // filter category field
       if (categoryId !== "default" && categoryId) {
         const filteredData = newData.filter(
           (p) => p.categoryId === parseInt(categoryId)
         );
         newData = filteredData;
+      }
+
+      // filter customer field
+      if (parentId !== "default" && parentId) {
+        const collections: ICollections[] = JSON.parse(
+          localStorage.getItem("collections") || ""
+        );
+
+        console.log(parentId);
+
+        const childrenCollections: ICollections[] | undefined =
+          collections.find(
+            (collect) => collect.categoryId == parseInt(parentId)
+          )?.children;
+
+        const childrenCollectionsId = childrenCollections?.map(
+          (collect) => collect.categoryId
+        );
+
+        newData = newData.filter((product) =>
+          childrenCollectionsId?.includes(product.categoryId)
+        );
       }
 
       console.log("newData: ", newData);
@@ -154,9 +215,9 @@ const Products = () => {
       setTotal(newData.length);
       setTimeout(() => {
         setLoading(false);
-      }, 200);
+      }, 700);
     }
-  }, [status, categoryId]);
+  }, [status, categoryId, parentId]);
 
   useEffect(() => {
     if (total && currentItem < total && currentItem > 0) {
@@ -164,7 +225,7 @@ const Products = () => {
     } else {
       setTimeout(() => {
         setLoading(false);
-      }, 200);
+      }, 700);
     }
   }, [products]);
 
@@ -186,7 +247,19 @@ const Products = () => {
 
   return (
     <div className="page-container">
-      <div className="page-title">Danh sách sản phẩm</div>
+      <div className="page-header">
+        <div className="page-header-title">Danh sách sản phẩm</div>
+        <div className="page-header-actions">
+          <div className="add-action">
+            <Button
+              variant="contained"
+              onClick={handleNavigateCreateProductPage}
+            >
+              Tạo sản phẩm mới
+            </Button>
+          </div>
+        </div>
+      </div>
       <div className="page-contents">
         {loading && (
           <div className="layout-loading">
@@ -245,6 +318,25 @@ const Products = () => {
                 }}
               >
                 {collections.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="Products__filter-item">
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Nhóm khách hàng"
+                size="small"
+                defaultValue="default"
+                helperText=""
+                onChange={(event) => {
+                  setParentId(event.target.value);
+                }}
+              >
+                {collectionCustomer.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

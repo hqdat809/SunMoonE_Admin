@@ -137,7 +137,9 @@ const Customers = () => {
 
   return (
     <div className="page-container">
-      <div className="page-title">Danh sách khách hàng</div>
+      <div className="page-header">
+        <div className="page-header-title"> Danh sách khách hàng</div>
+      </div>
       <div className="page-contents">
         {loading && (
           <div className="layout-loading">

@@ -3,7 +3,9 @@ import React from "react";
 const Dashboard = () => {
   return (
     <div className="page-container">
-      <div className="page-title">Dashboard</div>
+      <div className="page-header">
+        <div className="page-header-title">Dashboard</div>
+      </div>
       <div className="page-contents">
         <h1>Hello, Dashboard!</h1>
         <p>This is the dashboard page.</p>

@@ -59,7 +59,9 @@ const EditPage = () => {
 
   return (
     <div className="page-container">
-      <div className="page-title">Chỉnh sửa thông tin</div>
+      <div className="page-header">
+        <div className="page-header-title">Chỉnh sửa thông tin</div>
+      </div>
       <div className="page-contents">
         <div className="Edit">
           {!shop ? (

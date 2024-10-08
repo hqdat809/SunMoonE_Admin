@@ -48,7 +48,9 @@ const Info = () => {
 
   return (
     <div className="page-container">
-      <div className="page-title">Thông tin cửa hàng</div>
+      <div className="page-header">
+        <div className="page-header-title">Thông tin cửa hàng</div>
+      </div>
       <div className="InformationPage">
         <div className="Config">
           <div className="Information">

@@ -14,6 +14,9 @@ const Info = React.lazy(() => import("../pages/shop/info/Info"));
 const Layouts = React.lazy(() => import("../pages/layouts/Layouts"));
 const Customers = React.lazy(() => import("../pages/customer/Customers"));
 const Products = React.lazy(() => import("../pages/product/Products"));
+const CreateProductPage = React.lazy(
+  () => import("../pages/product/create/CreateProductPage")
+);
 const NotFound = React.lazy(() => import("../pages/not-found/NotFound"));
 
 const Routes = () => {
@@ -45,7 +48,16 @@ const Routes = () => {
         { path: RoutePaths.INFO, element: <Info /> },
         { path: RoutePaths.ORDERS, element: <Orders /> },
         { path: RoutePaths.CUSTOMERS, element: <Customers /> },
-        { path: RoutePaths.PRODUCTS, element: <Products /> },
+        {
+          path: RoutePaths.PRODUCTS,
+          children: [
+            { path: "", element: <Products /> },
+            {
+              path: RoutePaths.PRODUCTS_CREATE,
+              element: <CreateProductPage />,
+            },
+          ],
+        },
       ],
     },
     {

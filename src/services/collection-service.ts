@@ -19,7 +19,24 @@ export const getCollections = async (payload?: IGetCollectionRequest) => {
         },
       });
 
-    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+export const getDetailCollection = async (payload?: number) => {
+  try {
+    const response: AxiosResponse<IKiotResponse<ICollections>> =
+      await axios.get(`/kiot/categories/${payload}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            EAuthToken.KIOT_TOKEN
+          )}`,
+          Retailer: "thanhthuy1988",
+        },
+      });
+
     return response.data;
   } catch (error) {
     console.error("Error:", error);
