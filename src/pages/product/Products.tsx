@@ -4,7 +4,10 @@ import Table from "../../components/table/Table";
 import { productColumns } from "../../components/table/table-data";
 import { ICollections } from "../../interfaces/collection-interface";
 import { IKiotResponse, ISelectOptions } from "../../interfaces/common";
-import { IProductResponse } from "../../interfaces/product-interface";
+import {
+  IProductRequest,
+  IProductResponse,
+} from "../../interfaces/product-interface";
 import * as collectionServices from "../../services/collection-service";
 import * as productService from "../../services/product-service";
 import "./Products.scss";
@@ -31,24 +34,26 @@ const listStatus: ISelectOptions[] = [
 const Products = () => {
   const navigate = useNavigate();
 
-  const [collections, setCollections] = useState<ISelectOptions[]>([]);
-  const [products, setProducts] = useState<IProductResponse[]>([]);
+  const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState<number | undefined>(0);
-  const [currentItem, setCurrentItem] = useState(0);
-  const [status, setStatus] = useState<boolean>();
-  const [filteredProduct, setFilteredProduct] = useState<
-    IProductResponse[] | undefined
-  >(undefined);
+  const [products, setProducts] = useState<IProductResponse[]>([]);
+  const [collections, setCollections] = useState<ISelectOptions[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<IProductResponse[]>(
     []
   );
-  const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState();
-  const [categoryId, setCategoryId] = useState<string>("");
-  const [parentId, setParentId] = useState<string>("");
   const [collectionCustomer, setCollectionCustomer] = useState<
     ISelectOptions[]
   >([]);
+
+  const [filtered, setFiltered] = useState<IProductRequest>({
+    pageSize: 20,
+    currentItem: 0,
+    categoryId: "",
+    orderBy: "createdDate",
+    orderDirection: "DESC",
+    name: "",
+    isActive: "",
+  });
 
   const convertToSelectOptions = (data: ICollections[], getChildren = true) => {
     const result: ISelectOptions[] = [
@@ -76,50 +81,26 @@ const Products = () => {
   };
 
   const handleInputSearchText = (values: string) => {
-    setProducts([]);
-    setFilteredProduct(undefined);
-    setCurrentItem(0);
     debouncedFetch(values);
   };
 
   const debouncedFetch = useCallback(
-    _.debounce((values) => setSearchText(values), 1000), // 500ms debounce
-    []
+    _.debounce((values) => setFiltered({ ...filtered, name: values }), 1000), // 500ms debounce
+    [filtered]
   );
 
   const handleGetProducts = () => {
-    let payload = null;
-    if (searchText) {
-      payload = {
-        orderDirection: "DESC",
-        orderBy: "createdDate",
-        pageSize: 200,
-        currentItem: currentItem,
-        name: searchText,
-      };
-    } else {
-      payload = {
-        orderDirection: "DESC",
-        orderBy: "createdDate",
-        pageSize: 200,
-        currentItem: currentItem,
-      };
-    }
-
     productService
-      .getProducts(payload)
+      .getProducts(filtered)
       .then((res: IKiotResponse<IProductResponse> | undefined) => {
         if (res && products) {
-          const newData = [...products, ...res.data];
-          console.log("call: ", newData);
-          setProducts(newData);
+          setProducts(res.data);
           setTotal(res?.total);
-          setCurrentItem(currentItem + 200);
         }
+        setTimeout(() => {
+          setLoading(false);
+        }, 700);
       });
-    setTimeout(() => {
-      setLoading(false);
-    }, 700);
   };
 
   const handleGetCollections = () => {
@@ -136,93 +117,22 @@ const Products = () => {
     navigate(RoutePaths.PRODUCTS_CREATE);
   };
 
-  useEffect(() => {
-    if (searchText != undefined) {
-      setLoading(true);
-      handleGetProducts();
-    }
-  }, [searchText]);
-
-  useEffect(() => {
-    if (products.length > 0) {
-      setLoading(true);
-      let newData: IProductResponse[] = [];
-      newData = products;
-
-      // filter status field
-      if (status !== undefined) {
-        const filteredData = newData.filter((p) => p.isActive === status);
-        newData = filteredData;
-      } else {
-        newData = products;
-      }
-
-      // filter category field
-      if (categoryId !== "default" && categoryId) {
-        const filteredData = newData.filter(
-          (p) => p.categoryId === parseInt(categoryId)
-        );
-        newData = filteredData;
-      }
-
-      // filter customer field
-      if (parentId !== "default" && parentId) {
-        const collections: ICollections[] = JSON.parse(
-          localStorage.getItem("collections") || ""
-        );
-
-        console.log(parentId);
-
-        const childrenCollections: ICollections[] | undefined =
-          collections.find(
-            (collect) => collect.categoryId == parseInt(parentId)
-          )?.children;
-
-        const childrenCollectionsId = childrenCollections?.map(
-          (collect) => collect.categoryId
-        );
-
-        newData = newData.filter((product) =>
-          childrenCollectionsId?.includes(product.categoryId)
-        );
-      }
-
-      console.log("newData: ", newData);
-      console.log("products: ", products);
-
-      setFilteredProduct(newData);
-      setTotal(newData.length);
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-    }
-  }, [status, categoryId, parentId]);
-
-  useEffect(() => {
-    if (total && currentItem < total && currentItem > 0) {
-      handleGetProducts();
-    } else {
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-    }
-  }, [products]);
+  const handleSetCurrentItem = useCallback(
+    _.debounce((index) => {
+      console.log("debounced setCurrentItem: ", index);
+      setFiltered({ ...filtered, currentItem: index });
+    }, 500),
+    [filtered]
+  );
 
   useEffect(() => {
     setLoading(true);
-    handleGetCollections();
     handleGetProducts();
-  }, []);
+  }, [filtered]);
 
-  const renderProduct = () => {
-    if (filteredProduct === undefined) {
-      return products;
-    } else if (filteredProduct && filteredProduct.length === 0) {
-      return filteredProduct;
-    } else {
-      return filteredProduct;
-    }
-  };
+  useEffect(() => {
+    handleGetCollections();
+  }, []);
 
   return (
     <div className="page-container">
@@ -240,12 +150,6 @@ const Products = () => {
         </div>
       </div>
       <div className="page-contents">
-        {/* {loading && (
-          <div className="layout-loading">
-            <CircularProgress size="3rem" />
-          </div>
-        )} */}
-
         <div className="Products">
           <div className="Products__filter">
             <div className="Products__filter-item">
@@ -270,11 +174,11 @@ const Products = () => {
                 onChange={(event) => {
                   console.log(event.target.value);
                   if (event.target.value === "visible") {
-                    setStatus(true);
+                    setFiltered({ ...filtered, isActive: true });
                   } else if (event.target.value === "invisible") {
-                    setStatus(false);
+                    setFiltered({ ...filtered, isActive: false });
                   } else if (event.target.value === "default") {
-                    setStatus(undefined);
+                    setFiltered({ ...filtered, isActive: "" });
                   }
                 }}
               >
@@ -295,31 +199,17 @@ const Products = () => {
                 disabled={loading}
                 helperText=""
                 onChange={(event) => {
-                  console.log(event.target.value);
-                  setCategoryId(event.target.value);
+                  if (event.target.value !== "default") {
+                    setFiltered({
+                      ...filtered,
+                      categoryId: event.target.value,
+                    });
+                  } else {
+                    setFiltered({ ...filtered, categoryId: "" });
+                  }
                 }}
               >
                 {collections.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div className="Products__filter-item">
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Nhóm khách hàng"
-                size="small"
-                defaultValue="default"
-                helperText=""
-                disabled={loading}
-                onChange={(event) => {
-                  setParentId(event.target.value);
-                }}
-              >
-                {collectionCustomer.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -330,11 +220,13 @@ const Products = () => {
 
           <div className="Products__table">
             <Table
+              currentItem={filtered.currentItem}
               isLoading={loading}
               total={total}
-              pageSize={20}
+              pageSize={filtered.pageSize}
+              handleSetCurrentItem={handleSetCurrentItem}
               columns={productColumns}
-              rows={renderProduct()}
+              rows={products}
               setSelection={setSelectedProduct}
               className="Product__table"
             />

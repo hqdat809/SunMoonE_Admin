@@ -116,6 +116,27 @@ const Customers = () => {
     orderDirection: "DESC",
   });
 
+  const handleNameSearch = (values: string) => {
+    debouncedNamefilter(values);
+  };
+
+  const handlePhoneSearch = (values: string) => {
+    debouncedPhonefilter(values);
+  };
+
+  const debouncedNamefilter = useCallback(
+    _.debounce((values) => setFiltered({ ...filtered, name: values }), 1000), // 500ms debounce
+    [filtered]
+  );
+
+  const debouncedPhonefilter = useCallback(
+    _.debounce(
+      (values) => setFiltered({ ...filtered, contactNumber: values }),
+      1000
+    ), // 500ms debounce
+    [filtered]
+  );
+
   const handleGetCustomer = () => {
     customerService.getCustomerFromKiot(filtered).then((res) => {
       if (res) {
@@ -141,11 +162,6 @@ const Customers = () => {
     handleGetCustomer();
   }, [filtered]);
 
-  useEffect(() => {
-    setLoading(true);
-    handleGetCustomer();
-  }, []);
-
   return (
     <div className="page-container">
       <div className="page-header">
@@ -153,6 +169,28 @@ const Customers = () => {
       </div>
       <div className="page-contents">
         <div className="Customer">
+          <div className="Customer__filter">
+            <div className="Customer__filter-item">
+              <TextField
+                id="outlined-basic"
+                label="Tìm kiếm theo tên"
+                variant="outlined"
+                disabled={loading}
+                size="small"
+                onChange={(e) => handleNameSearch(e.target.value)}
+              />
+            </div>
+            <div className="Customer__filter-item">
+              <TextField
+                id="outlined-basic"
+                label="Tìm kiếm theo sđt"
+                variant="outlined"
+                disabled={loading}
+                size="small"
+                onChange={(e) => handlePhoneSearch(e.target.value)}
+              />
+            </div>
+          </div>
           <div className="">
             <Table
               currentItem={filtered.currentItem}

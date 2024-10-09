@@ -14,6 +14,8 @@ export const productColumns: GridColDef[] = [
     field: "",
     headerName: "Ảnh",
     flex: 1,
+    disableColumnMenu: true,
+    sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-image">
         <img
@@ -27,6 +29,8 @@ export const productColumns: GridColDef[] = [
     field: "fullName",
     headerName: "TÊN",
     flex: 3,
+    disableColumnMenu: true,
+    sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-name">{params.row?.fullName}</div>
     ),
@@ -35,6 +39,8 @@ export const productColumns: GridColDef[] = [
     field: "code",
     flex: 1,
     headerName: "MÃ",
+    disableColumnMenu: true,
+    sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-code">{params.row?.code}</div>
     ),
@@ -44,6 +50,8 @@ export const productColumns: GridColDef[] = [
     headerName: "DANH MỤC",
     flex: 2,
     width: 240,
+    disableColumnMenu: true,
+    sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-collection">{params.row?.categoryName}</div>
     ),
@@ -52,6 +60,8 @@ export const productColumns: GridColDef[] = [
     field: "basePrice",
     headerName: "GIÁ BÁN",
     flex: 1,
+    disableColumnMenu: true,
+    sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-price">{params.row?.basePrice}</div>
     ),
@@ -60,6 +70,9 @@ export const productColumns: GridColDef[] = [
     field: "categoryId",
     headerName: "Khách hàng",
     flex: 1,
+    filterable: false,
+    sortable: false,
+    disableColumnMenu: true,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <CategoryCustomer categoryId={params.row?.categoryId} />
     ),
@@ -68,6 +81,8 @@ export const productColumns: GridColDef[] = [
     field: "isActive",
     headerName: "TRẠNG THÁI",
     flex: 1,
+    disableColumnMenu: true,
+    sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-status">
         <Switch
@@ -160,7 +175,7 @@ export const orderColumns: GridColDef[] = [
   },
 
   {
-    field: "customerName",
+    field: "customerCode",
     headerName: "KHÁCH HÀNG",
     flex: 2,
   },

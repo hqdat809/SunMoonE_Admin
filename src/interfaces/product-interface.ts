@@ -10,14 +10,14 @@ export interface IProductRequest {
   includeWarranties?: boolean; // Lấy thông tin bảo hành
   masterUnitId?: number; //Id hàng hoá đơn vị cần filter
   masterProductId?: number; //Id hàng hoá cùng loại cần filter
-  categoryId?: number; //Id nhóm hàng cần filter
+  categoryId?: number | string | number[]; //Id nhóm hàng cần filter
   BranchIds?: number[]; //Id chi nhánh cần xem tồn kho
   orderDirection?: string;
   includeRemoveIds?: boolean; //Có lấy thông tin danh sách Id bị xoá dựa
   includeQuantity?: boolean; //có lấy thông tin định mức tồn
   productType?: boolean; //loại hàng hóa
   includeMaterial?: boolean; //có lấy danh sách hàng thành phần
-  isActive?: boolean | null; //Hàng đang kinh doanh,
+  isActive?: boolean | null | string; //Hàng đang kinh doanh,
   name?: string; //search hàng hóa theo tên
   includeSoftDeletedAttribute?: boolean; //Có lấy thông tin danh sách thuộc tính bị xóa của hàng hóa (mặc định là true nếu không truyền tham số này => Nghĩa là lấy tất cả thuộc tính bao gồm thuộc tính đã bị xóa. Ngược lại nếu = false thì loại bỏ các thuộc tính đã bị xóa).
   tradeMarkId?: number; //Id thương hiệu cần filter

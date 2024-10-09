@@ -105,6 +105,18 @@ const Orders = () => {
     }
   };
 
+  const handleInputSearchText = (values: string) => {
+    debouncedFetch(values);
+  };
+
+  const debouncedFetch = useCallback(
+    _.debounce(
+      (values) => setFiltered({ ...filtered, customerCode: values }),
+      1000
+    ),
+    [filtered]
+  );
+
   const handleSetCurrentItem = useCallback(
     _.debounce((index) => {
       console.log("debounced setCurrentItem: ", index);
@@ -117,103 +129,6 @@ const Orders = () => {
     setLoading(true);
     handleGetOrders();
   }, [filtered]);
-
-  // const renderProduct = () => {
-  //   if (filteredOrders === undefined) {
-  //     return orders;
-  //   } else if (filteredOrders && filteredOrders.length === 0) {
-  //     return filteredOrders;
-  //   } else {
-  //     return filteredOrders;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (orders.length > 0) {
-  //     setLoading(false);
-  //     let newData: IOrder[] = [];
-  //     newData = orders;
-
-  //     // filter status field
-  //     if (status !== undefined) {
-  //       const filteredData = newData.filter((p) => p.status === status);
-  //       newData = filteredData;
-  //     } else {
-  //       newData = orders;
-  //     }
-
-  //     // filter time range field
-  //     if (timeRange) {
-  //       switch (timeRange) {
-  //         case ETimeRange.TODAY: {
-  //           const today = new Date();
-  //           const todayString = today.toISOString().split("T")[0];
-  //           const filteredData = newData.filter((p) =>
-  //             p.createdDate?.startsWith(todayString)
-  //           );
-  //           newData = filteredData;
-  //           break;
-  //         }
-  //         case ETimeRange.THIS_WEEK: {
-  //           const today = new Date();
-
-  //           // Tính ngày đầu tuần (Thứ Hai) và ngày cuối tuần (Chủ Nhật)
-  //           const firstDayOfWeek = new Date(today);
-  //           firstDayOfWeek.setDate(today.getDate() - today.getDay() + 1); // Thứ Hai
-  //           firstDayOfWeek.setHours(0, 0, 0, 0); // Đặt về 00:00:00
-
-  //           const lastDayOfWeek = new Date(today);
-  //           lastDayOfWeek.setDate(today.getDate() - today.getDay() + 7); // Chủ Nhật
-  //           lastDayOfWeek.setHours(23, 59, 59, 999); // Đặt về 23:59:59
-
-  //           const filteredData = newData.filter((item) => {
-  //             const date = new Date(item.createdDate);
-  //             return date >= firstDayOfWeek && date <= lastDayOfWeek;
-  //           });
-  //           newData = filteredData;
-  //           break;
-  //         }
-  //         case ETimeRange.THIS_MONTH: {
-  //           const today = new Date();
-  //           const currentMonth = today.getMonth(); // Tháng (0-11)
-  //           const currentYear = today.getFullYear(); // Năm
-
-  //           const filteredData = newData.filter((item) => {
-  //             const date = new Date(item.createdDate);
-  //             return (
-  //               date.getMonth() === currentMonth &&
-  //               date.getFullYear() === currentYear
-  //             );
-  //           });
-  //           newData = filteredData;
-  //           break;
-  //         }
-  //         case ETimeRange.THIS_YEAR: {
-  //           const today = new Date();
-  //           const currentYear = today.getFullYear(); // Năm
-
-  //           const filteredData = newData.filter((item) => {
-  //             const date = new Date(item.createdDate);
-  //             return date.getFullYear() === currentYear;
-  //           });
-  //           newData = filteredData;
-  //           break;
-  //         }
-  //       }
-  //     }
-
-  //     setFilteredOrders(newData);
-  //     setTotal(newData.length);
-  //     setTimeout(() => {
-  //       setLoading(false);
-  //     }, 700);
-  //   }
-  // }, [status, timeRange]);
-
-  useEffect(() => {
-    setLoading(true);
-    handleGetOrders();
-  }, []);
 
   return (
     <div className="page-container">
@@ -235,7 +150,7 @@ const Orders = () => {
                 disabled={loading}
                 variant="outlined"
                 size="small"
-                // onChange={(e) => handleInputSearchText(e.target.value)}
+                onChange={(e) => handleInputSearchText(e.target.value)}
               />
             </div>
             <div className="Orders__filter-item">
