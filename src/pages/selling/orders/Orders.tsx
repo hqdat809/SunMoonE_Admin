@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import * as orderService from "../../../services/order-service";
-import { Button, CircularProgress, MenuItem, TextField } from "@mui/material";
-import { ETimeRange, ISelectOptions } from "../../../interfaces/common";
-import "./Orders.scss";
-import { IOrder } from "../../../interfaces/order-interface";
+import { Button, MenuItem, TextField } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import Table from "../../../components/table/Table";
 import { orderColumns } from "../../../components/table/table-data";
+import { ETimeRange, ISelectOptions } from "../../../interfaces/common";
+import { IOrder, IOrderRequest } from "../../../interfaces/order-interface";
+import * as orderService from "../../../services/order-service";
+import "./Orders.scss";
+import { useGridStatePersistence } from "@mui/x-data-grid/internals";
+import _ from "lodash";
 
 const listStatus: ISelectOptions[] = [
   { label: "Tất cả", value: "default" },
@@ -23,147 +25,190 @@ const listTimeRange: ISelectOptions[] = [
 ];
 
 const Orders = () => {
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [orders, setOrders] = useState<IOrder[]>([]);
-  const [currentItem, setCurrentItem] = useState(0);
-  const [total, setTotal] = useState<number | undefined>(0);
-  const [status, setStatus] = useState<number>();
-  const [timeRange, setTimeRange] = useState<ETimeRange | string>(
-    ETimeRange.THIS_YEAR
-  );
-  const [filteredOrders, setFilteredOrders] = useState<IOrder[] | undefined>(
-    undefined
-  );
   const [selectedOrders, setSelectedOrders] = useState<IOrder[]>([]);
 
+  const [filtered, setFiltered] = useState<IOrderRequest>({
+    pageSize: 25,
+    currentItem: 0,
+    toDate: new Date().toISOString(),
+    lastModifiedFrom: new Date(new Date().getFullYear(), 0, 0).toISOString(),
+    orderBy: "modifiedDate",
+    orderDirection: "DESC",
+    status: [],
+  });
+
   const handleGetOrders = () => {
-    console.log(new Date().toISOString);
-    orderService
-      .getListOrder({
-        status: status ? [status] : [],
-        orderBy: "createdDate",
-        orderDirection: "DESC",
-        pageSize: 200,
-        currentItem: currentItem,
-        toDate: new Date().toISOString(),
-        lastModifiedFrom: new Date(
-          new Date().getFullYear(),
-          1,
-          1
-        ).toISOString(),
-      })
-      .then((res) => {
-        if (res && orders) {
-          const newData = [...orders, ...res.data];
-          setOrders(newData);
-          setTotal(res?.total);
-          setCurrentItem(currentItem + 200);
-          if (currentItem >= res.total - 200) {
-            setTimeout(() => {
-              setLoading(false);
-            }, 700);
-          }
-        }
-      });
-  };
-
-  const renderProduct = () => {
-    if (filteredOrders === undefined) {
-      return orders;
-    } else if (filteredOrders && filteredOrders.length === 0) {
-      return filteredOrders;
-    } else {
-      return filteredOrders;
-    }
-  };
-
-  useEffect(() => {
-    if (orders.length > 0) {
-      setLoading(false);
-      let newData: IOrder[] = [];
-      newData = orders;
-
-      // filter status field
-      if (status !== undefined) {
-        const filteredData = newData.filter((p) => p.status === status);
-        newData = filteredData;
-      } else {
-        newData = orders;
+    orderService.getListOrder(filtered).then((res) => {
+      if (res) {
+        setTotal(res?.total);
+        setOrders(res.data);
       }
-
-      // filter time range field
-      if (timeRange) {
-        switch (timeRange) {
-          case ETimeRange.TODAY: {
-            const today = new Date();
-            const todayString = today.toISOString().split("T")[0];
-            const filteredData = newData.filter((p) =>
-              p.createdDate?.startsWith(todayString)
-            );
-            newData = filteredData;
-            break;
-          }
-          case ETimeRange.THIS_WEEK: {
-            const today = new Date();
-
-            // Tính ngày đầu tuần (Thứ Hai) và ngày cuối tuần (Chủ Nhật)
-            const firstDayOfWeek = new Date(today);
-            firstDayOfWeek.setDate(today.getDate() - today.getDay() + 1); // Thứ Hai
-            firstDayOfWeek.setHours(0, 0, 0, 0); // Đặt về 00:00:00
-
-            const lastDayOfWeek = new Date(today);
-            lastDayOfWeek.setDate(today.getDate() - today.getDay() + 7); // Chủ Nhật
-            lastDayOfWeek.setHours(23, 59, 59, 999); // Đặt về 23:59:59
-
-            const filteredData = newData.filter((item) => {
-              const date = new Date(item.createdDate);
-              return date >= firstDayOfWeek && date <= lastDayOfWeek;
-            });
-            newData = filteredData;
-            break;
-          }
-          case ETimeRange.THIS_MONTH: {
-            const today = new Date();
-            const currentMonth = today.getMonth(); // Tháng (0-11)
-            const currentYear = today.getFullYear(); // Năm
-
-            const filteredData = newData.filter((item) => {
-              const date = new Date(item.createdDate);
-              return (
-                date.getMonth() === currentMonth &&
-                date.getFullYear() === currentYear
-              );
-            });
-            newData = filteredData;
-            break;
-          }
-          case ETimeRange.THIS_YEAR: {
-            const today = new Date();
-            const currentYear = today.getFullYear(); // Năm
-
-            const filteredData = newData.filter((item) => {
-              const date = new Date(item.createdDate);
-              return date.getFullYear() === currentYear;
-            });
-            newData = filteredData;
-            break;
-          }
-        }
-      }
-
-      setFilteredOrders(newData);
-      setTotal(newData.length);
       setTimeout(() => {
         setLoading(false);
       }, 700);
+    });
+  };
+
+  const onChangeTimeRange = (timeRange: ETimeRange) => {
+    switch (timeRange) {
+      case ETimeRange.TODAY:
+        setFiltered({
+          ...filtered,
+          currentItem: 0,
+          lastModifiedFrom: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate()
+          ).toISOString(),
+        });
+        break;
+      case ETimeRange.THIS_WEEK: {
+        setFiltered({
+          ...filtered,
+          currentItem: 0,
+          toDate: new Date().toISOString(),
+          lastModifiedFrom: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate() - new Date().getDay() + 1
+          ).toISOString(),
+        });
+        break;
+      }
+      case ETimeRange.THIS_MONTH:
+        setFiltered({
+          ...filtered,
+          currentItem: 0,
+          toDate: new Date().toISOString(),
+          lastModifiedFrom: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            0
+          ).toISOString(),
+        });
+        break;
+      case ETimeRange.THIS_YEAR:
+        setFiltered({
+          ...filtered,
+          currentItem: 0,
+          toDate: new Date().toISOString(),
+          lastModifiedFrom: new Date(
+            new Date().getFullYear(),
+            0,
+            0
+          ).toISOString(),
+        });
+        break;
     }
-  }, [status, timeRange]);
+  };
+
+  const handleSetCurrentItem = useCallback(
+    _.debounce((index) => {
+      console.log("debounced setCurrentItem: ", index);
+      setFiltered({ ...filtered, currentItem: index });
+    }, 500),
+    [filtered]
+  );
 
   useEffect(() => {
-    if (total && currentItem < total && currentItem > 0) {
-      handleGetOrders();
-    }
-  }, [orders]);
+    setLoading(true);
+    handleGetOrders();
+  }, [filtered]);
+
+  // const renderProduct = () => {
+  //   if (filteredOrders === undefined) {
+  //     return orders;
+  //   } else if (filteredOrders && filteredOrders.length === 0) {
+  //     return filteredOrders;
+  //   } else {
+  //     return filteredOrders;
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (orders.length > 0) {
+  //     setLoading(false);
+  //     let newData: IOrder[] = [];
+  //     newData = orders;
+
+  //     // filter status field
+  //     if (status !== undefined) {
+  //       const filteredData = newData.filter((p) => p.status === status);
+  //       newData = filteredData;
+  //     } else {
+  //       newData = orders;
+  //     }
+
+  //     // filter time range field
+  //     if (timeRange) {
+  //       switch (timeRange) {
+  //         case ETimeRange.TODAY: {
+  //           const today = new Date();
+  //           const todayString = today.toISOString().split("T")[0];
+  //           const filteredData = newData.filter((p) =>
+  //             p.createdDate?.startsWith(todayString)
+  //           );
+  //           newData = filteredData;
+  //           break;
+  //         }
+  //         case ETimeRange.THIS_WEEK: {
+  //           const today = new Date();
+
+  //           // Tính ngày đầu tuần (Thứ Hai) và ngày cuối tuần (Chủ Nhật)
+  //           const firstDayOfWeek = new Date(today);
+  //           firstDayOfWeek.setDate(today.getDate() - today.getDay() + 1); // Thứ Hai
+  //           firstDayOfWeek.setHours(0, 0, 0, 0); // Đặt về 00:00:00
+
+  //           const lastDayOfWeek = new Date(today);
+  //           lastDayOfWeek.setDate(today.getDate() - today.getDay() + 7); // Chủ Nhật
+  //           lastDayOfWeek.setHours(23, 59, 59, 999); // Đặt về 23:59:59
+
+  //           const filteredData = newData.filter((item) => {
+  //             const date = new Date(item.createdDate);
+  //             return date >= firstDayOfWeek && date <= lastDayOfWeek;
+  //           });
+  //           newData = filteredData;
+  //           break;
+  //         }
+  //         case ETimeRange.THIS_MONTH: {
+  //           const today = new Date();
+  //           const currentMonth = today.getMonth(); // Tháng (0-11)
+  //           const currentYear = today.getFullYear(); // Năm
+
+  //           const filteredData = newData.filter((item) => {
+  //             const date = new Date(item.createdDate);
+  //             return (
+  //               date.getMonth() === currentMonth &&
+  //               date.getFullYear() === currentYear
+  //             );
+  //           });
+  //           newData = filteredData;
+  //           break;
+  //         }
+  //         case ETimeRange.THIS_YEAR: {
+  //           const today = new Date();
+  //           const currentYear = today.getFullYear(); // Năm
+
+  //           const filteredData = newData.filter((item) => {
+  //             const date = new Date(item.createdDate);
+  //             return date.getFullYear() === currentYear;
+  //           });
+  //           newData = filteredData;
+  //           break;
+  //         }
+  //       }
+  //     }
+
+  //     setFilteredOrders(newData);
+  //     setTotal(newData.length);
+  //     setTimeout(() => {
+  //       setLoading(false);
+  //     }, 700);
+  //   }
+  // }, [status, timeRange]);
 
   useEffect(() => {
     setLoading(true);
@@ -203,11 +248,19 @@ const Orders = () => {
                 defaultValue="default"
                 helperText=""
                 onChange={(event) => {
-                  setCurrentItem(0);
+                  setTotal(0);
                   if (event.target.value !== "default") {
-                    setStatus(parseInt(event.target.value));
+                    setFiltered({
+                      ...filtered,
+                      currentItem: 0,
+                      status: [parseInt(event.target.value)],
+                    });
                   } else {
-                    setStatus(undefined);
+                    setFiltered({
+                      ...filtered,
+                      currentItem: 0,
+                      status: [],
+                    });
                   }
                 }}
               >
@@ -228,8 +281,7 @@ const Orders = () => {
                 defaultValue={ETimeRange.THIS_YEAR}
                 helperText=""
                 onChange={(event) => {
-                  setTimeRange(event.target.value);
-                  setCurrentItem(0);
+                  onChangeTimeRange(event.target.value as ETimeRange);
                 }}
               >
                 {listTimeRange.map((option) => (
@@ -243,11 +295,13 @@ const Orders = () => {
 
           <div className="">
             <Table
+              currentItem={filtered.currentItem}
               isLoading={loading}
               total={total}
-              pageSize={25}
+              pageSize={filtered.pageSize}
+              handleSetCurrentItem={handleSetCurrentItem}
               columns={orderColumns}
-              rows={renderProduct()}
+              rows={orders}
               setSelection={setSelectedOrders}
               className="Customer__table"
             />

@@ -6,11 +6,15 @@ import {
   TextField,
 } from "@mui/material";
 import "./Customers.scss";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as customerService from "../../services/customer-service";
-import { ICustomer } from "../../interfaces/customer-interface";
+import {
+  ICustomer,
+  ICustomerRequest,
+} from "../../interfaces/customer-interface";
 import { customerColumns } from "../../components/table/table-data";
 import Table from "../../components/table/Table";
+import _, { filter } from "lodash";
 const listRank = [
   {
     value: "default",
@@ -101,36 +105,41 @@ const listPrice = [
 ];
 
 const Customers = () => {
-  const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer[]>();
-  const [currentItem, setCurrentItem] = useState(0);
+  const [filtered, setFiltered] = useState<ICustomerRequest>({
+    pageSize: 25,
+    currentItem: 0,
+    orderBy: "createdDate",
+    orderDirection: "DESC",
+  });
 
   const handleGetCustomer = () => {
-    customerService
-      .getCustomerFromKiot({ pageSize: 200, currentItem: currentItem })
-      .then((res) => {
-        if (res) {
-          const newData = [...customers, ...res.data];
-          console.log("res api data: ", res);
-          setCustomers(newData);
-          setTotal(res.total);
-          setCurrentItem(currentItem + 200);
-          if (currentItem >= res.total - 200) {
-            setTimeout(() => {
-              setLoading(false);
-            }, 700);
-          }
-        }
-      });
+    customerService.getCustomerFromKiot(filtered).then((res) => {
+      if (res) {
+        setCustomers(res.data);
+        setTotal(res.total);
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 700);
+    });
   };
 
+  const handleSetCurrentItem = useCallback(
+    _.debounce((index) => {
+      console.log("debounced setCurrentItem: ", index);
+      setFiltered({ ...filtered, currentItem: index });
+    }, 500),
+    [filtered]
+  );
+
   useEffect(() => {
-    if (total && currentItem < total && currentItem > 0) {
-      handleGetCustomer();
-    }
-  }, [customers]);
+    setLoading(true);
+    handleGetCustomer();
+  }, [filtered]);
 
   useEffect(() => {
     setLoading(true);
@@ -146,9 +155,11 @@ const Customers = () => {
         <div className="Customer">
           <div className="">
             <Table
+              currentItem={filtered.currentItem}
               isLoading={loading}
               total={total}
-              pageSize={20}
+              pageSize={filtered.pageSize}
+              handleSetCurrentItem={handleSetCurrentItem}
               columns={customerColumns}
               rows={customers}
               setSelection={setSelectedCustomer}

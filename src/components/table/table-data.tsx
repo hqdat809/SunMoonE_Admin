@@ -154,7 +154,7 @@ export const orderColumns: GridColDef[] = [
     flex: 1,
     renderCell: (params: GridRenderCellParams<ICustomer>) => (
       <div className="customer-createdDate">
-        {formatDate(`${params.row?.createdDate}`, true)}
+        {formatDate(`${params.row?.modifiedDate}`, true)}
       </div>
     ),
   },
