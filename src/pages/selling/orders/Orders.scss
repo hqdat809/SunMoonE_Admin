@@ -1,0 +1,30 @@
+.Orders {
+  &__filter {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+
+    &-item {
+      flex: 1;
+      min-width: 200px;
+      .MuiFormLabel-root {
+        font-size: 14px;
+      }
+      .MuiInputBase-input {
+        font-size: 14px;
+      }
+      .MuiTextField-root {
+        min-width: 100%;
+
+        .MuiInputBase-root {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  &__table {
+    padding-top: 30px;
+  }
+}

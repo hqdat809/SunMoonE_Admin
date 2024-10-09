@@ -119,7 +119,7 @@ const Products = () => {
       });
     setTimeout(() => {
       setLoading(false);
-    }, 200);
+    }, 700);
   };
 
   const handleGetCollections = () => {
@@ -136,28 +136,6 @@ const Products = () => {
     navigate(RoutePaths.PRODUCTS_CREATE);
   };
 
-  const handleChangeCategoryCustomer = (parentId: number) => {
-    const collections: ICollections[] = JSON.parse(
-      localStorage.getItem("collections") || ""
-    );
-
-    console.log(parentId);
-
-    const childrenCollections: ICollections[] | undefined = collections.find(
-      (collect) => collect.categoryId == parentId
-    )?.children;
-
-    const childrenCollectionsId = childrenCollections?.map(
-      (collect) => collect.categoryId
-    );
-
-    const newData = renderProduct().filter((product) =>
-      childrenCollectionsId?.includes(product.categoryId)
-    );
-
-    setFilteredProduct(newData);
-  };
-
   useEffect(() => {
     if (searchText != undefined) {
       setLoading(true);
@@ -169,10 +147,11 @@ const Products = () => {
     if (products.length > 0) {
       setLoading(true);
       let newData: IProductResponse[] = [];
+      newData = products;
 
       // filter status field
       if (status !== undefined) {
-        const filteredData = products.filter((p) => p.isActive === status);
+        const filteredData = newData.filter((p) => p.isActive === status);
         newData = filteredData;
       } else {
         newData = products;
@@ -261,11 +240,11 @@ const Products = () => {
         </div>
       </div>
       <div className="page-contents">
-        {loading && (
+        {/* {loading && (
           <div className="layout-loading">
             <CircularProgress size="3rem" />
           </div>
-        )}
+        )} */}
 
         <div className="Products">
           <div className="Products__filter">
@@ -274,6 +253,7 @@ const Products = () => {
                 id="outlined-basic"
                 label="Tìm kiếm"
                 variant="outlined"
+                disabled={loading}
                 size="small"
                 onChange={(e) => handleInputSearchText(e.target.value)}
               />
@@ -285,6 +265,7 @@ const Products = () => {
                 label="Trạng thái"
                 size="small"
                 defaultValue="default"
+                disabled={loading}
                 helperText=""
                 onChange={(event) => {
                   console.log(event.target.value);
@@ -311,6 +292,7 @@ const Products = () => {
                 label="Danh mục"
                 size="small"
                 defaultValue="default"
+                disabled={loading}
                 helperText=""
                 onChange={(event) => {
                   console.log(event.target.value);
@@ -332,6 +314,7 @@ const Products = () => {
                 size="small"
                 defaultValue="default"
                 helperText=""
+                disabled={loading}
                 onChange={(event) => {
                   setParentId(event.target.value);
                 }}

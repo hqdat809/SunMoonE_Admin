@@ -118,7 +118,9 @@ const Customers = () => {
           setTotal(res.total);
           setCurrentItem(currentItem + 200);
           if (currentItem >= res.total - 200) {
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 700);
           }
         }
       });
@@ -141,16 +143,12 @@ const Customers = () => {
         <div className="page-header-title"> Danh sách khách hàng</div>
       </div>
       <div className="page-contents">
-        {loading && (
-          <div className="layout-loading">
-            <CircularProgress size="3rem" />
-          </div>
-        )}
         <div className="Customer">
           <div className="">
             <Table
+              isLoading={loading}
               total={total}
-              pageSize={25}
+              pageSize={20}
               columns={customerColumns}
               rows={customers}
               setSelection={setSelectedCustomer}

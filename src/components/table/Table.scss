@@ -75,4 +75,9 @@
 
 .Table {
   //   max-width: calc(100vw - $sidebar-width - 80px);
+
+  .MuiCircularProgress-root {
+    position: absolute;
+    top: 200px;
+  }
 }

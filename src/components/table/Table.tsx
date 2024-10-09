@@ -42,7 +42,7 @@ const Table = ({
   return (
     <div style={{ height: "100%", width: "100%", maxWidth: "100%" }}>
       <DataGrid
-        rows={!isLoading ? rows || [] : []}
+        rows={rows}
         rowCount={total}
         columns={columns}
         className={`${className} Table`}

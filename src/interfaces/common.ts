@@ -26,3 +26,10 @@ export interface IBankResponse {
   bankId: string;
   fullName: string;
 }
+
+export enum ETimeRange {
+  TODAY = "TODAY",
+  THIS_WEEK = "THIS_WEEK",
+  THIS_MONTH = "THIS_MONTH",
+  THIS_YEAR = "THIS_YEAR",
+}
