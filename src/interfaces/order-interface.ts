@@ -17,8 +17,8 @@ export interface IOrder {
   retailerId: number;
   description?: string;
   usingCod: boolean;
-  modifiedDate: Date;
-  createdDate: Date;
+  modifiedDate: string;
+  createdDate: string;
   PriceBookId: number;
   Extra: string;
   orderDetails: IOrderDetails[];
@@ -33,10 +33,10 @@ export interface IOrderRequest {
   status?: number[]; // Tình trạng đặt hàng
   includePayment?: boolean; // có lấy thông tin thanh toán
   includeOrderDelivery?: boolean;
-  lastModifiedFrom?: Date; // thời gian cập nhật
+  lastModifiedFrom?: any; // thời gian cập nhật
   pageSize?: number; // số items trong 1 trang; mặc định 20 items; tối đa 100 items
   currentItem?: number;
-  toDate?: Date; //Thời gian cập nhật cho đến thời điểm toDate
+  toDate?: any; //Thời gian cập nhật cho đến thời điểm toDate
   orderBy?: string; //Sắp xếp dữ liệu theo trường orderBy (Ví dụ?: orderBy=name)
   orderDirection?: string; //Sắp xếp kết quả trả về theo?: Tăng dần Asc (Mặc định); giảm dần Desc
   createdDate?: Date; //Thời gian tạo

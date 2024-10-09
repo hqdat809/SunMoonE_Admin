@@ -7,6 +7,7 @@ import { Switch, Tooltip } from "@mui/material";
 import { ICustomer } from "../../interfaces/customer-interface";
 import { formatDate } from "../../utils/date-utils";
 import CategoryCustomer from "../../pages/product/categoryCustomer/CategoryCustomer";
+import { IOrder } from "../../interfaces/order-interface";
 
 export const productColumns: GridColDef[] = [
   {
@@ -127,13 +128,65 @@ export const customerColumns: GridColDef[] = [
     ),
   },
   {
-    field: "createdDate",
+    field: "modifiedDate",
     headerName: "NGÀY TẠO",
     flex: 1,
     renderCell: (params: GridRenderCellParams<ICustomer>) => (
       <div className="customer-createdDate">
-        {formatDate(`${params.row?.createdDate}`)}
+        {formatDate(`${params.row?.modifiedDate}`)}
       </div>
     ),
+  },
+];
+
+export const orderColumns: GridColDef[] = [
+  {
+    field: "code",
+    flex: 1,
+    headerName: "MÃ ĐẶT HÀNG",
+    renderCell: (params: GridRenderCellParams<IProductResponse>) => (
+      <div className="product-code">{params.row?.code}</div>
+    ),
+  },
+  {
+    field: "createdDate",
+    headerName: "THỜI GIAN",
+    flex: 1,
+    renderCell: (params: GridRenderCellParams<ICustomer>) => (
+      <div className="customer-createdDate">
+        {formatDate(`${params.row?.createdDate}`, true)}
+      </div>
+    ),
+  },
+
+  {
+    field: "customerName",
+    headerName: "KHÁCH HÀNG",
+    flex: 2,
+  },
+  {
+    field: "total",
+    headerName: "TỔNG HÓA ĐƠN",
+    flex: 1,
+    align: "right",
+    renderCell: (params: GridRenderCellParams<IOrder>) => (
+      <div className="product-code">{params.row?.total.toLocaleString()}</div>
+    ),
+  },
+  {
+    field: "totalPayment",
+    headerName: "ĐÃ THANH TOÁN",
+    flex: 1,
+    align: "right",
+    renderCell: (params: GridRenderCellParams<IOrder>) => (
+      <div className="product-code">
+        {params.row?.totalPayment.toLocaleString()}
+      </div>
+    ),
+  },
+  {
+    field: "statusValue",
+    headerName: "TRẠNG THÁI",
+    flex: 1,
   },
 ];
