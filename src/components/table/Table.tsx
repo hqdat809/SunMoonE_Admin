@@ -76,6 +76,8 @@ const Table = ({
             handleSetCurrentItem?.(event.page * pageSize);
           }
         }}
+        hideFooter={total ? total < 20 : true}
+        hideFooterPagination={isLoading}
         onRowSelectionModelChange={(ids) => {
           const selectedRowsData = ids.map((id) =>
             rows?.find((row) => row.id === id)

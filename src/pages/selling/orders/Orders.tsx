@@ -85,7 +85,7 @@ const Orders = () => {
           lastModifiedFrom: new Date(
             new Date().getFullYear(),
             new Date().getMonth(),
-            0
+            1
           ).toISOString(),
         });
         break;
@@ -125,8 +125,10 @@ const Orders = () => {
   );
 
   useEffect(() => {
-    setLoading(true);
-    handleGetOrders();
+    if (!loading) {
+      setLoading(true);
+      handleGetOrders();
+    }
   }, [filtered]);
 
   return (

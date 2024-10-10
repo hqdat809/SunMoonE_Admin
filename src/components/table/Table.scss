@@ -3,10 +3,10 @@
 
 .DataTable {
   .product-image {
-    padding: 6px 6px;
+    margin: 6px 6px;
     img {
-      width: 48px;
-      height: 55px;
+      width: 40px;
+      height: 40px;
       border-radius: 4px;
     }
   }
@@ -54,15 +54,7 @@
     }
   }
 
-  .MuiDataGrid-cell {
-    height: 66px !important;
-  }
-
   .MuiDataGrid-row--lastVisible {
-  }
-
-  .MuiDataGrid-row {
-    min-height: 66px !important;
   }
 
   .MuiDataGrid-filler {

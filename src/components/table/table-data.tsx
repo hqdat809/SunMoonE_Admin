@@ -13,10 +13,11 @@ import { ICollections } from "../../interfaces/collection-interface";
 
 export const productColumns: GridColDef[] = [
   {
-    field: "",
+    field: "images",
     headerName: "Ảnh",
     flex: 1,
     disableColumnMenu: true,
+    maxWidth: 76,
     sortable: false,
     renderCell: (params: GridRenderCellParams<IProductResponse>) => (
       <div className="product-image">
