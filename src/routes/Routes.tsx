@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { getStorageToken } from "../utils/storage-utils";
 import * as RoutePaths from "./paths";
+import CollectionPage from "../pages/product/collection/CollectionPage";
 const Auth = React.lazy(() => import("../pages/auth/Auth"));
 const Dashboard = React.lazy(() => import("../pages/shop/dashboard/Dashboard"));
 const EditPage = React.lazy(() => import("../pages/shop/edit/EditPage"));
@@ -58,6 +59,7 @@ const Routes = () => {
             },
           ],
         },
+        { path: RoutePaths.COLLECTIONS, element: <CollectionPage /> },
       ],
     },
     {

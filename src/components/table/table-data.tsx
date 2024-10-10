@@ -8,6 +8,8 @@ import { ICustomer } from "../../interfaces/customer-interface";
 import { formatDate } from "../../utils/date-utils";
 import CategoryCustomer from "../../pages/product/categoryCustomer/CategoryCustomer";
 import { IOrder } from "../../interfaces/order-interface";
+import CollectionNameColumn from "../../pages/product/collection/name-column/CollectionNameColumn";
+import { ICollections } from "../../interfaces/collection-interface";
 
 export const productColumns: GridColDef[] = [
   {
@@ -203,5 +205,24 @@ export const orderColumns: GridColDef[] = [
     field: "statusValue",
     headerName: "TRẠNG THÁI",
     flex: 1,
+  },
+];
+
+export const collectionsColumns: GridColDef[] = [
+  {
+    field: "categoryId",
+    flex: 1,
+    headerName: "ID",
+  },
+  {
+    field: "categoryName",
+    headerName: "TÊN",
+    flex: 7,
+    renderCell: (params: GridRenderCellParams<ICollections>) => (
+      <CollectionNameColumn
+        name={params.row?.categoryName}
+        collectionId={params.row?.categoryId}
+      />
+    ),
   },
 ];

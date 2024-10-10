@@ -6,7 +6,7 @@ import { AUTH } from "../routes/paths";
 
 const instance = axios.create({
   // baseURL: "https://public.kiotapi.com", // Replace with your API URL
-  baseURL: "http://localhost:8080/", // Replace with your API URL
+  baseURL: import.meta.env.VITE_API_URL, // Replace with your API URL
   timeout: 100000, // Set request timeout (optional)
   headers: {
     "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const refreshAccessToken = async () => {
   try {
     const response = await axios
       .create({
-        baseURL: "http://localhost:8080/",
+        baseURL: import.meta.env.VITE_API_URL,
         headers: {
           Authorization: `Bearer ${localStorage.getItem(
             EAuthToken.REFRESH_TOKEN

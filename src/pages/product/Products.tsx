@@ -13,7 +13,7 @@ import * as productService from "../../services/product-service";
 import "./Products.scss";
 import CircularProgress from "@mui/material/CircularProgress";
 import * as _ from "lodash";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as RoutePaths from "../../routes/paths";
 
 const listStatus: ISelectOptions[] = [
@@ -31,29 +31,31 @@ const listStatus: ISelectOptions[] = [
   },
 ];
 
+const initialFilter = {
+  pageSize: 20,
+  currentItem: 0,
+  categoryId: import.meta.env.VITE_COLLECTION_PARENT_ID,
+  orderBy: "createdDate",
+  orderDirection: "DESC",
+  name: "",
+  isActive: "",
+};
+
 const Products = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState<number | undefined>(0);
   const [products, setProducts] = useState<IProductResponse[]>([]);
   const [collections, setCollections] = useState<ISelectOptions[]>([]);
+  const [firstTime, setFirstTime] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<IProductResponse[]>(
     []
   );
-  const [collectionCustomer, setCollectionCustomer] = useState<
-    ISelectOptions[]
-  >([]);
+  const [collectionId, setCollectionId] = useState(location.state.categoryId);
 
-  const [filtered, setFiltered] = useState<IProductRequest>({
-    pageSize: 20,
-    currentItem: 0,
-    categoryId: "",
-    orderBy: "createdDate",
-    orderDirection: "DESC",
-    name: "",
-    isActive: "",
-  });
+  const [filtered, setFiltered] = useState<IProductRequest>(initialFilter);
 
   const convertToSelectOptions = (data: ICollections[], getChildren = true) => {
     const result: ISelectOptions[] = [
@@ -96,6 +98,7 @@ const Products = () => {
         if (res && products) {
           setProducts(res.data);
           setTotal(res?.total);
+          setFirstTime(false);
         }
         setTimeout(() => {
           setLoading(false);
@@ -104,13 +107,13 @@ const Products = () => {
   };
 
   const handleGetCollections = () => {
-    collectionServices
-      .getCollections({ hierachicalData: true, pageSize: 100 })
-      .then((data) => {
-        localStorage.setItem("collections", JSON.stringify(data?.data));
-        setCollections(convertToSelectOptions(data?.data || []));
-        setCollectionCustomer(convertToSelectOptions(data?.data || [], false));
-      });
+    collectionServices.getCollections().then((data) => {
+      localStorage.setItem("collections", JSON.stringify(data?.children));
+      setCollections(convertToSelectOptions(data?.children || []));
+      if (collectionId) {
+        setFiltered({ ...filtered, categoryId: collectionId });
+      }
+    });
   };
 
   const handleNavigateCreateProductPage = () => {
@@ -126,8 +129,15 @@ const Products = () => {
   );
 
   useEffect(() => {
-    setLoading(true);
-    handleGetProducts();
+    if (
+      collectionId &&
+      filtered.categoryId === import.meta.env.VITE_COLLECTION_PARENT_ID
+    ) {
+      console.log("do nothing");
+    } else {
+      setLoading(true);
+      handleGetProducts();
+    }
   }, [filtered]);
 
   useEffect(() => {
@@ -195,17 +205,18 @@ const Products = () => {
                 select
                 label="Danh mục"
                 size="small"
-                defaultValue="default"
+                defaultValue={collectionId ? collectionId : "default"}
                 disabled={loading}
                 helperText=""
                 onChange={(event) => {
+                  setCollectionId(undefined);
                   if (event.target.value !== "default") {
                     setFiltered({
                       ...filtered,
                       categoryId: event.target.value,
                     });
                   } else {
-                    setFiltered({ ...filtered, categoryId: "" });
+                    setFiltered(initialFilter);
                   }
                 }}
               >

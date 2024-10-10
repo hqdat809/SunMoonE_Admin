@@ -1,0 +1,10 @@
+@use "../../../../themes/colors" as *;
+
+.CollectionNameColumn {
+  font-weight: bold;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: $blue_09;
+  }
+}

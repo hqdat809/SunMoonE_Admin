@@ -13,6 +13,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import * as RoutePath from "../../routes/paths";
+import FolderIcon from "@mui/icons-material/Folder";
 import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
 interface ISidebarEl {
   name: string;
@@ -45,7 +46,7 @@ const varSidebarElements: ISidebarEl[] = [
       {
         name: "Danh sách đơn hàng",
         icon: ShoppingCartIcon,
-        route: "orders",
+        route: RoutePath.ORDERS,
       },
     ],
   },
@@ -56,7 +57,7 @@ const varSidebarElements: ISidebarEl[] = [
     children: [
       {
         name: "Danh sách khách hàng",
-        route: "customers",
+        route: RoutePath.CUSTOMERS,
         icon: RecentActorsIcon,
       },
     ],
@@ -66,7 +67,12 @@ const varSidebarElements: ISidebarEl[] = [
     title: "Sản phẩm",
     src: storeIcon.productIcon,
     children: [
-      { name: "Danh sách sản phẩm", route: "products", icon: InventoryIcon },
+      {
+        name: "Danh sách sản phẩm",
+        route: RoutePath.PRODUCTS,
+        icon: InventoryIcon,
+      },
+      { name: "Danh mục", route: RoutePath.COLLECTIONS, icon: FolderIcon },
     ],
   },
 ];

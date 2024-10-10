@@ -15,6 +15,7 @@ interface ITableProps {
   total?: number;
   pageSize?: number;
   currentItem?: number;
+  tableId?: string;
 }
 
 const Table = ({
@@ -27,6 +28,7 @@ const Table = ({
   total,
   handleSetCurrentItem,
   currentItem,
+  tableId,
   pageSize,
 }: ITableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -53,6 +55,7 @@ const Table = ({
   return (
     <div style={{ height: "100%", width: "100%", maxWidth: "100%" }}>
       <DataGrid
+        getRowId={(row) => (tableId ? row[tableId] : row.id)}
         rows={rows}
         rowCount={total}
         columns={columns}

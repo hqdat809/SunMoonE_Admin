@@ -42,8 +42,8 @@ export const getTokenFromKiotViet = async () => {
   const data = {
     scopes: "PublicApi.Access",
     grant_type: "client_credentials",
-    client_id: "6123c83c-9b78-406e-8e7e-a42ebb02c367",
-    client_secret: "1CD4E9BBE765EFED04330FCC39C6E3824102D01F",
+    client_id: import.meta.env.VITE_CLIENT_ID,
+    client_secret: import.meta.env.VITE_CLIENT_SECRET,
   };
 
   try {
