@@ -21,7 +21,7 @@ const CollectionPage = () => {
   >([]);
 
   const [filtered, setFiltered] = useState<IGetCollectionRequest>({
-    pageSize: 25,
+    pageSize: 20,
     currentItem: 0,
     orderBy: "modifiedDate",
     orderDirection: "DESC",
@@ -73,7 +73,7 @@ const CollectionPage = () => {
               columns={collectionsColumns}
               rows={collections}
               setSelection={setSelectedCollections}
-              className="Customer__table"
+              className="DataTable"
             />
           </div>
         </div>

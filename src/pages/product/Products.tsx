@@ -53,7 +53,7 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<IProductResponse[]>(
     []
   );
-  const [collectionId, setCollectionId] = useState(location.state.categoryId);
+  const [collectionId, setCollectionId] = useState(location.state?.categoryId);
 
   const [filtered, setFiltered] = useState<IProductRequest>(initialFilter);
 
@@ -239,7 +239,7 @@ const Products = () => {
               columns={productColumns}
               rows={products}
               setSelection={setSelectedProduct}
-              className="Product__table"
+              className="DataTable"
             />
           </div>
         </div>

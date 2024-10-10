@@ -13,8 +13,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import * as RoutePath from "../../routes/paths";
-import FolderIcon from "@mui/icons-material/Folder";
 import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
+import FolderZipRoundedIcon from "@mui/icons-material/FolderZipRounded";
+
 interface ISidebarEl {
   name: string;
   src?: string;
@@ -72,7 +73,11 @@ const varSidebarElements: ISidebarEl[] = [
         route: RoutePath.PRODUCTS,
         icon: InventoryIcon,
       },
-      { name: "Danh mục", route: RoutePath.COLLECTIONS, icon: FolderIcon },
+      {
+        name: "Danh mục",
+        route: RoutePath.COLLECTIONS,
+        icon: FolderZipRoundedIcon,
+      },
     ],
   },
 ];

@@ -30,7 +30,7 @@ const Orders = () => {
   const [selectedOrders, setSelectedOrders] = useState<IOrder[]>([]);
 
   const [filtered, setFiltered] = useState<IOrderRequest>({
-    pageSize: 25,
+    pageSize: 20,
     currentItem: 0,
     toDate: new Date().toISOString(),
     lastModifiedFrom: new Date(new Date().getFullYear(), 0, 0).toISOString(),
@@ -217,7 +217,7 @@ const Orders = () => {
               columns={orderColumns}
               rows={orders}
               setSelection={setSelectedOrders}
-              className="Customer__table"
+              className="DataTable"
             />
           </div>
         </div>

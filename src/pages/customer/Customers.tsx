@@ -110,7 +110,7 @@ const Customers = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer[]>();
   const [filtered, setFiltered] = useState<ICustomerRequest>({
-    pageSize: 25,
+    pageSize: 20,
     currentItem: 0,
     orderBy: "createdDate",
     orderDirection: "DESC",
@@ -201,7 +201,7 @@ const Customers = () => {
               columns={customerColumns}
               rows={customers}
               setSelection={setSelectedCustomer}
-              className="Customer__table"
+              className="DataTable"
             />
           </div>
         </div>
