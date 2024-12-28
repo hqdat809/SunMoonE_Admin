@@ -40,7 +40,7 @@ const Customers = () => {
             toastSuccess("Cập nhật hạng người dùng thành công")
             await handleGetCustomer()
         } catch (error) {
-            toastError("Cập nhật hạng người dùng thất bại: ", error)
+            toastError("Cập nhật hạng người dùng thất bại")
         }
     }
 
