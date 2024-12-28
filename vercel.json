@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/auth",
+      "destination": "/"
+    },
+    {
       "source": "/dashboard",
       "destination": "/"
     },
@@ -39,10 +43,6 @@
     {
       "source": "/collections",
       "destination": "/"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/404"
     },
     {
       "source": "/api/v1/:path*",
