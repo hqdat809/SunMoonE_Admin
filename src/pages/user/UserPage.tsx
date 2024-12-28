@@ -5,7 +5,7 @@ import {
     DialogTitle,
     TextField
 } from "@mui/material";
-import _ from "lodash";
+import _, { filter } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/table/Table";
 import { userColumns } from "../../components/table/table-data";
@@ -16,6 +16,7 @@ import { IUserBank, IUserData, RoleEnum } from "../../interfaces/user-interfaces
 import * as UserService from "../../services/user-service";
 import { toastError, toastSuccess } from "../../utils/notifications-utils";
 import "./UserPage.scss";
+import { DataGrid } from "@mui/x-data-grid";
 
 const Customers = () => {
     const [total, setTotal] = useState(0);
@@ -27,8 +28,8 @@ const Customers = () => {
     const [filtered, setFiltered] = useState<ICustomerRequest>({
         pageSize: 20,
         currentItem: 0,
-        orderBy: "createdDate",
-        orderDirection: "DESC",
+        orderBy: "email",
+        orderDirection: "ASC",
     });
 
 
@@ -71,6 +72,7 @@ const Customers = () => {
     );
 
     useEffect(() => {
+        console.log('change')
         setLoading(true);
         handleGetCustomer();
     }, [filtered]);
@@ -85,15 +87,18 @@ const Customers = () => {
                     <div className="Customer__filter">
                     </div>
                     <div className="">
-                        <Table
-                            currentItem={filtered.currentItem}
-                            isLoading={loading}
-                            total={total}
-                            pageSize={filtered.pageSize}
-                            handleSetCurrentItem={handleSetCurrentItem}
-                            columns={userColumns(handleUpdateUserRole, handleOpenBankDialog)}
+                        <DataGrid
                             rows={users}
-                            className="DataTable"
+                            columns={userColumns(handleUpdateUserRole, handleOpenBankDialog)}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: {
+                                        pageSize: 10,
+                                    },
+                                },
+                            }}
+                            checkboxSelection
+                            disableRowSelectionOnClick
                         />
                     </div>
                 </div>
