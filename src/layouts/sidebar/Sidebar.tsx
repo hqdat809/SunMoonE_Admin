@@ -32,12 +32,6 @@ const varSidebarElements: ISidebarEl[] = [
     src: storeIcon.shopIcon,
     children: [
       { name: "Dashboard", icon: DashboardIcon, route: "dashboard" },
-      { name: "Thông tin cửa hàng", icon: InfoIcon, route: "info" },
-      {
-        name: "Sửa thông tin",
-        icon: AppRegistrationRoundedIcon,
-        route: RoutePath.EDIT_SHOP,
-      },
     ],
   },
   {
