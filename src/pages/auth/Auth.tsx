@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LoginForm from "../login/LoginForm";
 import RegisterForm from "../register/Register";
 import "./Auth.scss";
-import { getStorageToken } from "../../utils/storage-utils";
 
 interface IAuthProps {
   setAccessToken: (token: string) => void;

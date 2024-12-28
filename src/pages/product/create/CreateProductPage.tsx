@@ -5,13 +5,6 @@ import "./CreateProductPage.scss";
 const CreateProductPage = () => {
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    // Get values by field name
-    const name = formData.get("name");
-    const descriptions = formData.get("descriptions");
-
-    // Display values in console (or use as needed)
   };
 
   return (

@@ -1,16 +1,16 @@
-import "./Info.scss";
-import logo from "../../../assets/image/icon.jpg";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { useEffect, useState } from "react";
-import { getProducts } from "../../../services/product-service";
-import { IProductResponse } from "../../../interfaces/product-interface";
+import { useNavigate } from "react-router-dom";
+import logo from "../../../assets/image/icon.jpg";
 import noProductImage from "../../../assets/image/no-product-image.png";
 import QRCode from "../../../assets/image/QRCode.png";
-import { getShopInfo } from "../../../services/shop-service";
 import { IBankResponse, IShopResponse } from "../../../interfaces/common";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import { useNavigate } from "react-router-dom";
+import { IProductResponse } from "../../../interfaces/product-interface";
 import * as RoutePath from "../../../routes/paths";
 import { getBankInfo } from "../../../services/bank-service";
+import { getProducts } from "../../../services/product-service";
+import { getShopInfo } from "../../../services/shop-service";
+import "./Info.scss";
 
 const Info = () => {
   const [products, setProducts] = useState<IProductResponse[]>();

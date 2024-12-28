@@ -7,18 +7,13 @@ import {
   IGetCollectionRequest,
 } from "../../../interfaces/collection-interface";
 import {
-  getCollections,
-  getDetailCollection,
+  getCollections
 } from "../../../services/collection-service";
-import { IKiotResponse } from "../../../interfaces/common";
 
 const CollectionPage = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [collections, setCollections] = useState<ICollections[]>([]);
-  const [selectedCollections, setSelectedCollections] = useState<
-    ICollections[]
-  >([]);
 
   const [filtered, setFiltered] = useState<IGetCollectionRequest>({
     pageSize: 20,
@@ -76,7 +71,6 @@ const CollectionPage = () => {
               handleSetCurrentItem={handleSetCurrentItem}
               columns={collectionsColumns}
               rows={collections}
-              setSelection={setSelectedCollections}
               className="DataTable"
             />
           </div>

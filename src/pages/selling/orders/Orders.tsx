@@ -1,12 +1,12 @@
+import { MenuItem, TextField } from "@mui/material";
 import _ from "lodash";
-import "./Orders.scss";
-import Table from "../../../components/table/Table";
 import { useCallback, useEffect, useState } from "react";
-import { Button, MenuItem, TextField } from "@mui/material";
-import * as orderService from "../../../services/order-service";
+import Table from "../../../components/table/Table";
 import { orderColumns } from "../../../components/table/table-data";
 import { ETimeRange, ISelectOptions } from "../../../interfaces/common";
 import { IOrder, IOrderRequest } from "../../../interfaces/order-interface";
+import * as orderService from "../../../services/order-service";
+import "./Orders.scss";
 
 const listStatus: ISelectOptions[] = [
   { label: "Tất cả", value: "default" },
@@ -27,7 +27,6 @@ const Orders = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [orders, setOrders] = useState<IOrder[]>([]);
-  const [selectedOrders, setSelectedOrders] = useState<IOrder[]>([]);
 
   const [filtered, setFiltered] = useState<IOrderRequest>({
     pageSize: 20,
@@ -212,7 +211,6 @@ const Orders = () => {
               handleSetCurrentItem={handleSetCurrentItem}
               columns={orderColumns}
               rows={orders}
-              setSelection={setSelectedOrders}
               className="DataTable"
             />
           </div>

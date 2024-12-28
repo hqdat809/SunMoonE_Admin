@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import { ApiClient } from "./api-clients";
 import { IShopResponse } from "../interfaces/common";
+import { ApiClient } from "./api-clients";
 
 export const getShopInfo = async (cb?: () => void) => {
   const response: AxiosResponse<IShopResponse[]> = await ApiClient.get(

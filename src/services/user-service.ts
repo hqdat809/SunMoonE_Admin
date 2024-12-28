@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
-import { ApiClient } from "./api-clients";
-import { IShopResponse } from "../interfaces/common";
 import { IUserData, RoleEnum } from "../interfaces/user-interfaces";
+import { ApiClient } from "./api-clients";
 
 export const getAllUser = async (cb?: () => void) => {
     const response: AxiosResponse<IUserData[]> = await ApiClient.get(

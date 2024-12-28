@@ -1,13 +1,12 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   TRegisterRequest,
   TSignInRequest,
   TSignInResponse,
 } from "../interfaces/user-interfaces";
+import { toastError } from "../utils/notifications-utils";
 import { saveStorageToken } from "../utils/storage-utils";
 import { ApiClient } from "./api-clients";
-import { toastError } from "../utils/notifications-utils";
-import { IError } from "../interfaces/common";
 
 export const signIn = async (payload: TSignInRequest, cb?: () => void) => {
   try {

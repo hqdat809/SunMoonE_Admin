@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
-import * as collectionServices from "../../../services/collection-service";
+import { useEffect, useState } from "react";
 import { ICollections } from "../../../interfaces/collection-interface";
-import { ISelectOptions } from "../../../interfaces/common";
-import { ICategory } from "../../../interfaces/category-interface";
 
 interface IProps {
   categoryId: number;
 }
 
 const CategoryCustomer = ({ categoryId }: IProps) => {
-  const [collections, setCollections] = useState<ICollections[]>();
   const [categoryParent, setCategoryParent] = useState<ICollections>();
 
   const handleGetCollections = () => {

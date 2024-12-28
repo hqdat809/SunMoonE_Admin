@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import "./EditPage.scss";
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { editShopInfo, getShopInfo } from "../../../services/shop-service";
-import { IBankResponse, IShopResponse } from "../../../interfaces/common";
 import { Button } from "@mui/material";
+import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { IBankResponse, IShopResponse } from "../../../interfaces/common";
 import { editBankInfo, getBankInfo } from "../../../services/bank-service";
+import { editShopInfo, getShopInfo } from "../../../services/shop-service";
+import "./EditPage.scss";
 
 const EditPage = () => {
   const [shop, setShop] = useState<IShopResponse>();

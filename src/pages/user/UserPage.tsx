@@ -10,8 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import Table from "../../components/table/Table";
 import { userColumns } from "../../components/table/table-data";
 import {
-    ICustomer,
-    ICustomerRequest,
+    ICustomerRequest
 } from "../../interfaces/customer-interface";
 import { IUserBank, IUserData, RoleEnum } from "../../interfaces/user-interfaces";
 import * as UserService from "../../services/user-service";
@@ -22,7 +21,6 @@ const Customers = () => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [users, setUsers] = useState<IUserData[]>([]);
-    const [selectedCustomer, setSelectedCustomer] = useState<ICustomer[]>();
     const [open, setOpen] = useState(false);
     const [bankDetails, setBankDetails] = useState<IUserBank | undefined>();
 
@@ -40,34 +38,9 @@ const Customers = () => {
         setBankDetails(bank)
     };
 
-    const handleClose = (value: string) => {
+    const handleClose = () => {
         setOpen(false);
     };
-
-    const handleNameSearch = (values: string) => {
-        debouncedNamefilter(values);
-    };
-
-    const handlePhoneSearch = (values: string) => {
-        debouncedPhonefilter(values);
-    };
-
-    const debouncedNamefilter = useCallback(
-        _.debounce(
-            (values) => setFiltered({ ...filtered, currentItem: 0, name: values }),
-            1000
-        ), // 500ms debounce
-        [filtered]
-    );
-
-    const debouncedPhonefilter = useCallback(
-        _.debounce(
-            (values) =>
-                setFiltered({ ...filtered, currentItem: 0, contactNumber: values }),
-            1000
-        ), // 500ms debounce
-        [filtered]
-    );
 
     const handleGetCustomer = async () => {
 
@@ -120,7 +93,6 @@ const Customers = () => {
                             handleSetCurrentItem={handleSetCurrentItem}
                             columns={userColumns(handleUpdateUserRole, handleOpenBankDialog)}
                             rows={users}
-                            setSelection={setSelectedCustomer}
                             className="DataTable"
                         />
                     </div>

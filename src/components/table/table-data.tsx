@@ -1,16 +1,15 @@
+import { Chip, MenuItem, Switch, TextField, Tooltip } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import noProductImage from "../../assets/image/no-product-image.png";
-import { IProductResponse } from "../../interfaces/product-interface";
-import "./Table.scss";
-import Checkbox from "../check-box/Checkbox";
-import { Chip, MenuItem, Switch, TextField, Tooltip } from "@mui/material";
-import { ICustomer } from "../../interfaces/customer-interface";
-import { formatDate } from "../../utils/date-utils";
-import CategoryCustomer from "../../pages/product/categoryCustomer/CategoryCustomer";
-import { IOrder } from "../../interfaces/order-interface";
-import CollectionNameColumn from "../../pages/product/collection/name-column/CollectionNameColumn";
 import { ICollections } from "../../interfaces/collection-interface";
+import { ICustomer } from "../../interfaces/customer-interface";
+import { IOrder } from "../../interfaces/order-interface";
+import { IProductResponse } from "../../interfaces/product-interface";
 import { IUserBank, IUserData, RoleEnum } from "../../interfaces/user-interfaces";
+import CategoryCustomer from "../../pages/product/categoryCustomer/CategoryCustomer";
+import CollectionNameColumn from "../../pages/product/collection/name-column/CollectionNameColumn";
+import { formatDate } from "../../utils/date-utils";
+import "./Table.scss";
 
 export const productColumns: GridColDef[] = [
   {

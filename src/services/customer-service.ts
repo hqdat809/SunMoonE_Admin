@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { ICustomer, ICustomerRequest } from "../interfaces/customer-interface";
 import { IKiotResponse } from "../interfaces/common";
+import { ICustomer, ICustomerRequest } from "../interfaces/customer-interface";
 import { EAuthToken } from "../interfaces/user-interfaces";
 
 export const getCustomerFromKiot = async (

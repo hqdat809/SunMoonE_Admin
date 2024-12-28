@@ -1,5 +1,7 @@
-import { Button, MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
+import * as _ from "lodash";
 import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Table from "../../components/table/Table";
 import { productColumns } from "../../components/table/table-data";
 import { ICollections } from "../../interfaces/collection-interface";
@@ -11,10 +13,6 @@ import {
 import * as collectionServices from "../../services/collection-service";
 import * as productService from "../../services/product-service";
 import "./Products.scss";
-import CircularProgress from "@mui/material/CircularProgress";
-import * as _ from "lodash";
-import { useLocation, useNavigate } from "react-router-dom";
-import * as RoutePaths from "../../routes/paths";
 
 const listStatus: ISelectOptions[] = [
   {
@@ -42,17 +40,12 @@ const initialFilter = {
 };
 
 const Products = () => {
-  const navigate = useNavigate();
   const location = useLocation();
 
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState<number | undefined>(0);
   const [products, setProducts] = useState<IProductResponse[]>([]);
   const [collections, setCollections] = useState<ISelectOptions[]>([]);
-  const [firstTime, setFirstTime] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState<IProductResponse[]>(
-    []
-  );
   const [collectionId, setCollectionId] = useState(location.state?.categoryId);
 
   const [filtered, setFiltered] = useState<IProductRequest>(initialFilter);
@@ -101,7 +94,6 @@ const Products = () => {
         if (res && products) {
           setProducts(res.data);
           setTotal(res?.total);
-          setFirstTime(false);
         }
         setTimeout(() => {
           setLoading(false);
@@ -119,10 +111,6 @@ const Products = () => {
           setFiltered({ ...filtered, categoryId: collectionId });
         }
       });
-  };
-
-  const handleNavigateCreateProductPage = () => {
-    navigate(RoutePaths.PRODUCTS_CREATE);
   };
 
   const handleSetCurrentItem = useCallback(
@@ -250,7 +238,6 @@ const Products = () => {
               handleSetCurrentItem={handleSetCurrentItem}
               columns={productColumns}
               rows={products}
-              setSelection={setSelectedProduct}
               className="DataTable"
             />
           </div>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { EAuthToken } from "../interfaces/user-interfaces";
 import { AUTH } from "../routes/paths";
 
@@ -84,9 +84,6 @@ instance.interceptors.response.use(
       return instance(originalRequest);
     }
 
-    const data: any = error?.response?.data;
-    const message = data?.message;
-
     // if (message) throw new Error(message);
 
     // If token refresh failed or there was another error, reject the request
@@ -95,3 +92,4 @@ instance.interceptors.response.use(
 );
 
 export { instance as ApiClient };
+

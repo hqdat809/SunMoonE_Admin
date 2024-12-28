@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { IKiotResponse } from "../../interfaces/common";
-import _ from "lodash";
 
 interface ITableProps {
   rows?: any[];

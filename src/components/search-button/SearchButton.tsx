@@ -10,7 +10,7 @@ const SearchButton = ({ onSearch }: ISearchButtonProps) => {
 
   useEffect(() => {
     onSearch?.(valueSearch);
-  }, [valueSearch]);
+  }, [onSearch, valueSearch]);
 
   return (
     <div className="SearchButton">

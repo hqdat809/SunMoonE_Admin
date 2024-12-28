@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import FolderZipRoundedIcon from "@mui/icons-material/FolderZipRounded";
+import InfoIcon from "@mui/icons-material/Info";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import ReceiptRoundedIcon from "@mui/icons-material/ReceiptRounded";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Icon } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/image/icon.jpg";
 import * as storeIcon from "../../assets/image/sidebar";
-import "./Sidebar.scss";
-import { useLocation, useNavigate } from "react-router-dom";
-import InfoIcon from "@mui/icons-material/Info";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import InventoryIcon from "@mui/icons-material/Inventory";
 import * as RoutePath from "../../routes/paths";
-import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
-import FolderZipRoundedIcon from "@mui/icons-material/FolderZipRounded";
-import ReceiptRoundedIcon from "@mui/icons-material/ReceiptRounded";
-import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import "./Sidebar.scss";
 interface ISidebarEl {
   name: string;
   src?: string;

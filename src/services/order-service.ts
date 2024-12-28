@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { IKiotResponse } from "../interfaces/common";
-import { EAuthToken } from "../interfaces/user-interfaces";
 import { IOrder, IOrderRequest } from "../interfaces/order-interface";
+import { EAuthToken } from "../interfaces/user-interfaces";
 
 export const getListOrder = async (
   payload?: IOrderRequest,

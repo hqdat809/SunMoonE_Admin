@@ -1,8 +1,7 @@
-import React from "react";
-import "./CollectionNameColumn.scss";
 import { useNavigate } from "react-router-dom";
-import * as RoutePath from "../../../../routes/paths";
 import { ICollections } from "../../../../interfaces/collection-interface";
+import * as RoutePath from "../../../../routes/paths";
+import "./CollectionNameColumn.scss";
 
 interface IProps {
   name?: string;

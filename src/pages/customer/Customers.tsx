@@ -1,114 +1,21 @@
-import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import {
-  CircularProgress,
-  InputAdornment,
-  MenuItem,
-  TextField,
+  TextField
 } from "@mui/material";
-import "./Customers.scss";
+import _ from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import * as customerService from "../../services/customer-service";
+import Table from "../../components/table/Table";
+import { customerColumns } from "../../components/table/table-data";
 import {
   ICustomer,
   ICustomerRequest,
 } from "../../interfaces/customer-interface";
-import { customerColumns } from "../../components/table/table-data";
-import Table from "../../components/table/Table";
-import _, { filter } from "lodash";
-const listRank = [
-  {
-    value: "default",
-    label: "---none---",
-  },
-  {
-    value: "customer",
-    label: "Thành viên",
-  },
-  {
-    value: "silver",
-    label: "Bạc",
-  },
-  {
-    value: "gold",
-    label: "Vàng",
-  },
-  {
-    value: "diamond",
-    label: "Kim",
-  },
-];
-
-const listCreatedDate = [
-  {
-    value: "default",
-    label: "---none---",
-  },
-  {
-    value: "today",
-    label: "Hôm nay",
-  },
-  {
-    value: "yesterday",
-    label: "Hôm qua",
-  },
-  {
-    value: "thisWeek",
-    label: "Tuần này",
-  },
-  {
-    value: "lastWeek",
-    label: "Tuần trước",
-  },
-  {
-    value: "7daysLasted",
-    label: "7 ngày gần đây",
-  },
-  {
-    value: "30daysLasted",
-    label: "30 ngày gần đây",
-  },
-  {
-    value: "thisMonth",
-    label: "Tháng này",
-  },
-  {
-    value: "lastMonth",
-    label: "Tháng trước",
-  },
-];
-
-const listPrice = [
-  {
-    value: "default",
-    label: "---none---",
-  },
-  {
-    value: "ctv",
-    label: "Bảng giá CTV",
-  },
-  {
-    value: "ctv1",
-    label: "Bảng giá CTV1",
-  },
-  {
-    value: "ctv2",
-    label: "Bảng giá CTV2",
-  },
-  {
-    value: "ctv3",
-    label: "Bảng giá CTV3",
-  },
-  {
-    value: "ctv4",
-    label: "Bảng giá CTV4",
-  },
-];
+import * as customerService from "../../services/customer-service";
+import "./Customers.scss";
 
 const Customers = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<ICustomer[]>();
   const [filtered, setFiltered] = useState<ICustomerRequest>({
     pageSize: 20,
     currentItem: 0,
@@ -203,7 +110,6 @@ const Customers = () => {
               handleSetCurrentItem={handleSetCurrentItem}
               columns={customerColumns}
               rows={customers}
-              setSelection={setSelectedCustomer}
               className="DataTable"
             />
           </div>

@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios";
+import { IInvoice, IInvoiceRequest } from "../interfaces/bill-interface";
 import { IKiotResponse } from "../interfaces/common";
 import { EAuthToken } from "../interfaces/user-interfaces";
-import { IOrder, IOrderRequest } from "../interfaces/order-interface";
-import { IInvoice, IInvoiceRequest } from "../interfaces/bill-interface";
 
 export const getListInvoice = async (
   payload?: IInvoiceRequest,

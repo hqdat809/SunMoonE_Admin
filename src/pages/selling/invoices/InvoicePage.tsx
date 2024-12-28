@@ -27,7 +27,6 @@ const InvoicePage = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
-  const [selectedInvoices, setSelectedInvoices] = useState<IInvoice[]>([]);
 
   const [filtered, setFiltered] = useState<IInvoiceRequest>({
     pageSize: 20,
@@ -209,7 +208,6 @@ const InvoicePage = () => {
               handleSetCurrentItem={handleSetCurrentItem}
               columns={invoiceColumns}
               rows={invoices}
-              setSelection={setSelectedInvoices}
               className="DataTable"
             />
           </div>
