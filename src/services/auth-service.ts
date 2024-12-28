@@ -10,7 +10,7 @@ import { ApiClient } from "./api-clients";
 
 export const signIn = async (payload: TSignInRequest, cb?: () => void) => {
   try {
-    const response: AxiosResponse<TSignInResponse> = await ApiClient.post(
+    const response: AxiosResponse<TSignInResponse> = await axios.post(
       `/api/v1/auth/authenticate`,
       payload
     );
