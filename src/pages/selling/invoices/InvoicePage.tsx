@@ -1,19 +1,19 @@
-import _ from "lodash";
-import "./Orders.scss";
-import Table from "../../../components/table/Table";
 import { useCallback, useEffect, useState } from "react";
-import { Button, MenuItem, TextField } from "@mui/material";
-import * as orderService from "../../../services/order-service";
-import { orderColumns } from "../../../components/table/table-data";
+import { IInvoice, IInvoiceRequest } from "../../../interfaces/bill-interface";
+import { getListInvoice } from "../../../services/invoice-service";
+import "./InvoicePage.scss";
 import { ETimeRange, ISelectOptions } from "../../../interfaces/common";
-import { IOrder, IOrderRequest } from "../../../interfaces/order-interface";
+import _ from "lodash";
+import Table from "../../../components/table/Table";
+import { MenuItem, TextField } from "@mui/material";
+import { invoiceColumns } from "../../../components/table/table-data";
 
 const listStatus: ISelectOptions[] = [
   { label: "Tất cả", value: "default" },
-  { label: "Phiếu tạm", value: 1 },
-  { label: "Đang giao hàng", value: 2 },
-  { label: "Hoàn thành", value: 3 },
-  { label: "Đã hủy", value: 4 },
+  { label: "Hoàn thành", value: 1 },
+  { label: "Đã hủy", value: 2 },
+  { label: "Đang xử lý", value: 3 },
+  { label: "Không giao", value: 5 },
 ];
 
 const listTimeRange: ISelectOptions[] = [
@@ -23,33 +23,49 @@ const listTimeRange: ISelectOptions[] = [
   { label: "Năm này", value: ETimeRange.THIS_YEAR },
 ];
 
-const Orders = () => {
+const InvoicePage = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [orders, setOrders] = useState<IOrder[]>([]);
-  const [selectedOrders, setSelectedOrders] = useState<IOrder[]>([]);
+  const [invoices, setInvoices] = useState<IInvoice[]>([]);
+  const [selectedInvoices, setSelectedInvoices] = useState<IInvoice[]>([]);
 
-  const [filtered, setFiltered] = useState<IOrderRequest>({
+  const [filtered, setFiltered] = useState<IInvoiceRequest>({
     pageSize: 20,
     currentItem: 0,
-    toDate: new Date().toISOString(),
-    lastModifiedFrom: new Date(new Date().getFullYear(), 0, 0).toISOString(),
     orderBy: "createdDate",
     orderDirection: "DESC",
-    status: [],
   });
 
-  const handleGetOrders = () => {
-    orderService.getListOrder(filtered).then((res) => {
+  const handleGetInvoices = () => {
+    getListInvoice(filtered).then((res) => {
       if (res) {
         setTotal(res?.total);
-        setOrders(res.data);
+        setInvoices(res.data);
       }
       setTimeout(() => {
         setLoading(false);
       }, 700);
     });
   };
+
+  const handleInputSearchText = (values: string) => {
+    debouncedFetch(values);
+  };
+
+  const debouncedFetch = useCallback(
+    _.debounce(
+      (values) => setFiltered({ ...filtered, customerCode: values }),
+      1000
+    ),
+    [filtered]
+  );
+
+  const handleSetCurrentItem = useCallback(
+    _.debounce((index) => {
+      setFiltered({ ...filtered, currentItem: index });
+    }, 500),
+    [filtered]
+  );
 
   const onChangeTimeRange = (timeRange: ETimeRange) => {
     switch (timeRange) {
@@ -104,41 +120,22 @@ const Orders = () => {
     }
   };
 
-  const handleInputSearchText = (values: string) => {
-    debouncedFetch(values);
-  };
-
-  const debouncedFetch = useCallback(
-    _.debounce(
-      (values) => setFiltered({ ...filtered, customerCode: values }),
-      1000
-    ),
-    [filtered]
-  );
-
-  const handleSetCurrentItem = useCallback(
-    _.debounce((index) => {
-      setFiltered({ ...filtered, currentItem: index });
-    }, 500),
-    [filtered]
-  );
-
   useEffect(() => {
     if (!loading) {
       setLoading(true);
-      handleGetOrders();
+      handleGetInvoices();
     }
   }, [filtered]);
 
   return (
     <div className="page-container">
       <div className="page-header">
-        <div className="page-header-title">Danh sách đơn hàng</div>
+        <div className="page-header-title">Danh sách hóa đơn</div>
       </div>
       <div className="page-contents">
-        <div className="Orders">
-          <div className="Orders__filter">
-            <div className="Orders__filter-item">
+        <div className="Invoices">
+          <div className="Invoices__filter">
+            <div className="Invoices__filter-item">
               <TextField
                 id="outlined-basic"
                 label="Tìm kiếm"
@@ -148,7 +145,7 @@ const Orders = () => {
                 onChange={(e) => handleInputSearchText(e.target.value)}
               />
             </div>
-            <div className="Orders__filter-item">
+            <div className="Invoices__filter-item">
               <TextField
                 id="outlined-select-currency"
                 select
@@ -181,7 +178,7 @@ const Orders = () => {
                 ))}
               </TextField>
             </div>
-            <div className="Orders__filter-item">
+            <div className="Invoices__filter-item">
               <TextField
                 id="outlined-select-currency"
                 select
@@ -210,9 +207,9 @@ const Orders = () => {
               total={total}
               pageSize={filtered.pageSize}
               handleSetCurrentItem={handleSetCurrentItem}
-              columns={orderColumns}
-              rows={orders}
-              setSelection={setSelectedOrders}
+              columns={invoiceColumns}
+              rows={invoices}
+              setSelection={setSelectedInvoices}
               className="DataTable"
             />
           </div>
@@ -222,4 +219,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default InvoicePage;

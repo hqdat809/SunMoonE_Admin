@@ -5,6 +5,17 @@ export interface IKiotResponse<T> {
   timestamp: Date;
 }
 
+export enum EStatusError {
+  UNAUTHORIZED = "UNAUTHORIZED",
+}
+
+export interface IError {
+  time: string;
+  status: string;
+  message: string;
+  details: string;
+}
+
 export interface ISelectOptions {
   value: string | number;
   label: string;

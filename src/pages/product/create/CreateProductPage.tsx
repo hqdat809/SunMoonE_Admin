@@ -12,7 +12,6 @@ const CreateProductPage = () => {
     const descriptions = formData.get("descriptions");
 
     // Display values in console (or use as needed)
-    console.log({ name, descriptions });
   };
 
   return (

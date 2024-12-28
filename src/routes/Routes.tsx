@@ -11,9 +11,13 @@ const Auth = React.lazy(() => import("../pages/auth/Auth"));
 const Dashboard = React.lazy(() => import("../pages/shop/dashboard/Dashboard"));
 const EditPage = React.lazy(() => import("../pages/shop/edit/EditPage"));
 const Orders = React.lazy(() => import("../pages/selling/orders/Orders"));
+const InvoicePage = React.lazy(
+  () => import("../pages/selling/invoices/InvoicePage")
+);
 const Info = React.lazy(() => import("../pages/shop/info/Info"));
 const Layouts = React.lazy(() => import("../pages/layouts/Layouts"));
 const Customers = React.lazy(() => import("../pages/customer/Customers"));
+const User = React.lazy(() => import("../pages/user/UserPage"));
 const Products = React.lazy(() => import("../pages/product/Products"));
 const CreateProductPage = React.lazy(
   () => import("../pages/product/create/CreateProductPage")
@@ -47,8 +51,13 @@ const Routes = () => {
         { path: RoutePaths.DASHBOARD, element: <Dashboard /> },
         { path: RoutePaths.EDIT_SHOP, element: <EditPage /> },
         { path: RoutePaths.INFO, element: <Info /> },
+
         { path: RoutePaths.ORDERS, element: <Orders /> },
+        { path: RoutePaths.INVOICES, element: <InvoicePage /> },
+
         { path: RoutePaths.CUSTOMERS, element: <Customers /> },
+        { path: RoutePaths.USER, element: <User /> },
+
         {
           path: RoutePaths.PRODUCTS,
           children: [

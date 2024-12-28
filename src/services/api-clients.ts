@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { EAuthToken } from "../interfaces/user-interfaces";
 import { AUTH } from "../routes/paths";
 
@@ -87,7 +87,7 @@ instance.interceptors.response.use(
     const data: any = error?.response?.data;
     const message = data?.message;
 
-    if (message) throw new Error(message);
+    // if (message) throw new Error(message);
 
     // If token refresh failed or there was another error, reject the request
     return Promise.reject(error);

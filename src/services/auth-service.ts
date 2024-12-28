@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   TRegisterRequest,
   TSignInRequest,
@@ -6,21 +6,29 @@ import {
 } from "../interfaces/user-interfaces";
 import { saveStorageToken } from "../utils/storage-utils";
 import { ApiClient } from "./api-clients";
+import { toastError } from "../utils/notifications-utils";
+import { IError } from "../interfaces/common";
 
 export const signIn = async (payload: TSignInRequest, cb?: () => void) => {
-  console.log("signIn", payload);
+  try {
+    const response: AxiosResponse<TSignInResponse> = await ApiClient.post(
+      `/api/v1/auth/authenticate`,
+      payload
+    );
 
-  const response: AxiosResponse<TSignInResponse> = await ApiClient.post(
-    `/api/v1/auth/authenticate`,
-    payload
-  );
+    if (response.status === 200) {
+      saveStorageToken(response.data.token);
+      cb?.();
+    }
 
-  if (response.status === 200) {
-    saveStorageToken(response.data.token);
-    cb?.();
+    return response.data;
+  } catch (error: any) {
+    if (error.status === 401) {
+      toastError("Email hoặc mật khẩu không đúng!!");
+    } else {
+      toastError(error.message);
+    }
   }
-
-  return response.data;
 };
 
 export const register = async (payload: TRegisterRequest, cb?: () => void) => {
@@ -52,7 +60,6 @@ export const getTokenFromKiotViet = async () => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
-    console.log(response.data);
     localStorage.setItem("KIOT_TOKEN", response.data.access_token);
   } catch (error) {
     console.error("Error:", error);

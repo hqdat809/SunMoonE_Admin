@@ -31,7 +31,9 @@ const LoginForm = ({ setHasAccount, setAccessToken }: ILoginFormProps) => {
 
   const handleSubmit = (values: TSignInRequest) => {
     authService.signIn(values, handleNavigateHome).then((data) => {
-      setAccessToken(data.token);
+      if (data) {
+        setAccessToken(data?.token);
+      }
     });
   };
 
@@ -43,7 +45,7 @@ const LoginForm = ({ setHasAccount, setAccessToken }: ILoginFormProps) => {
         onSubmit={handleSubmit}
       >
         {(formikProps) => (
-          <Form>
+          <Form onSubmit={formikProps.handleSubmit}>
             <div className="divider d-flex align-items-center my-4">
               <div className="text-center fw-bold mx-3 mb-0 login-title">
                 Đăng Nhập
@@ -55,11 +57,10 @@ const LoginForm = ({ setHasAccount, setAccessToken }: ILoginFormProps) => {
                 type="email"
                 name="email"
                 id="form3Example3"
-                className={`form-control form-control-lg  ${
-                  formikProps.errors.email &&
+                className={`form-control form-control-lg  ${formikProps.errors.email &&
                   formikProps.touched.email &&
                   "login-error-field"
-                }`}
+                  }`}
                 placeholder="Enter a valid email address"
               />
               <ErrorMessage
@@ -74,11 +75,10 @@ const LoginForm = ({ setHasAccount, setAccessToken }: ILoginFormProps) => {
                 type="password"
                 name="password"
                 id="form3Example4"
-                className={`form-control form-control-lg  ${
-                  formikProps.errors.password &&
+                className={`form-control form-control-lg  ${formikProps.errors.password &&
                   formikProps.touched.password &&
                   "login-error-field"
-                }`}
+                  }`}
                 placeholder="Enter password"
               />
               <ErrorMessage

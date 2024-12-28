@@ -125,13 +125,17 @@ const Customers = () => {
   };
 
   const debouncedNamefilter = useCallback(
-    _.debounce((values) => setFiltered({ ...filtered, name: values }), 1000), // 500ms debounce
+    _.debounce(
+      (values) => setFiltered({ ...filtered, currentItem: 0, name: values }),
+      1000
+    ), // 500ms debounce
     [filtered]
   );
 
   const debouncedPhonefilter = useCallback(
     _.debounce(
-      (values) => setFiltered({ ...filtered, contactNumber: values }),
+      (values) =>
+        setFiltered({ ...filtered, currentItem: 0, contactNumber: values }),
       1000
     ), // 500ms debounce
     [filtered]
@@ -151,7 +155,6 @@ const Customers = () => {
 
   const handleSetCurrentItem = useCallback(
     _.debounce((index) => {
-      console.log("debounced setCurrentItem: ", index);
       setFiltered({ ...filtered, currentItem: index });
     }, 500),
     [filtered]

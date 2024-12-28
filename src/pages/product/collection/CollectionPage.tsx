@@ -23,25 +23,23 @@ const CollectionPage = () => {
   const [filtered, setFiltered] = useState<IGetCollectionRequest>({
     pageSize: 20,
     currentItem: 0,
-    orderBy: "modifiedDate",
-    orderDirection: "DESC",
-    hierachicalData: true,
+    orderBy: "parentId",
+    orderDirection: "ASC",
+    hierachicalData: false,
   });
 
   const handleSetCurrentItem = useCallback(
     _.debounce((index) => {
-      console.log("debounced setCurrentItem: ", index);
       setFiltered({ ...filtered, currentItem: index });
     }, 500),
     [filtered]
   );
 
-  const handleGetOrders = () => {
-    getCollections().then((res) => {
+  const handleGetCollections = () => {
+    getCollections(filtered).then((res) => {
       if (res) {
-        console.log(res.children);
-        setTotal(res?.children?.length || 0);
-        setCollections(res?.children || []);
+        setTotal(res?.total);
+        setCollections(res?.data || []);
       }
       setTimeout(() => {
         setLoading(false);
@@ -51,13 +49,19 @@ const CollectionPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    handleGetOrders();
+    handleGetCollections();
   }, [filtered]);
+
+  useEffect(() => {
+    getCollections({ hierachicalData: true, pageSize: 100 }).then((data) => {
+      localStorage.setItem("collections", JSON.stringify(data?.data));
+    });
+  }, []);
 
   return (
     <div className="page-container">
       <div className="page-header">
-        <div className="page-header-title">CollectionPage</div>
+        <div className="page-header-title">Danh mục</div>
       </div>
       <div className="page-contents">
         <div className="Collections">

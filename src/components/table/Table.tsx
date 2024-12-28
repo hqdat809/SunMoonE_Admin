@@ -35,14 +35,9 @@ const Table = ({
 
   useEffect(() => {
     if (currentItem === 0) {
-      console.log("reset pagination....");
       setCurrentPage(0);
     }
   }, [currentItem]);
-
-  useEffect(() => {
-    console.log("tableData: ", rows);
-  }, [rows]);
 
   // if (total == undefined) {
   //   return (
@@ -70,9 +65,7 @@ const Table = ({
         disableRowSelectionOnClick
         onPaginationModelChange={(event) => {
           setCurrentPage(event.page);
-          console.log("number of page: ", event.page);
           if (pageSize) {
-            console.log("click next");
             handleSetCurrentItem?.(event.page * pageSize);
           }
         }}

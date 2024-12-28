@@ -34,7 +34,7 @@ const listStatus: ISelectOptions[] = [
 const initialFilter = {
   pageSize: 20,
   currentItem: 0,
-  categoryId: import.meta.env.VITE_COLLECTION_PARENT_ID,
+  categoryId: "",
   orderBy: "createdDate",
   orderDirection: "DESC",
   name: "",
@@ -87,7 +87,10 @@ const Products = () => {
   };
 
   const debouncedFetch = useCallback(
-    _.debounce((values) => setFiltered({ ...filtered, name: values }), 1000), // 500ms debounce
+    _.debounce(
+      (values) => setFiltered({ ...filtered, currentItem: 0, name: values }),
+      1000
+    ), // 500ms debounce
     [filtered]
   );
 
@@ -107,13 +110,15 @@ const Products = () => {
   };
 
   const handleGetCollections = () => {
-    collectionServices.getCollections().then((data) => {
-      localStorage.setItem("collections", JSON.stringify(data?.children));
-      setCollections(convertToSelectOptions(data?.children || []));
-      if (collectionId) {
-        setFiltered({ ...filtered, categoryId: collectionId });
-      }
-    });
+    collectionServices
+      .getCollections({ hierachicalData: true, pageSize: 100 })
+      .then((data) => {
+        localStorage.setItem("collections", JSON.stringify(data?.data));
+        setCollections(convertToSelectOptions(data?.data || [], true));
+        if (collectionId) {
+          setFiltered({ ...filtered, categoryId: collectionId });
+        }
+      });
   };
 
   const handleNavigateCreateProductPage = () => {
@@ -122,7 +127,6 @@ const Products = () => {
 
   const handleSetCurrentItem = useCallback(
     _.debounce((index) => {
-      console.log("debounced setCurrentItem: ", index);
       setFiltered({ ...filtered, currentItem: index });
     }, 500),
     [filtered]
@@ -133,11 +137,10 @@ const Products = () => {
       collectionId &&
       filtered.categoryId === import.meta.env.VITE_COLLECTION_PARENT_ID
     ) {
-      console.log("do nothing");
-    } else {
-      setLoading(true);
-      handleGetProducts();
+      return;
     }
+    setLoading(true);
+    handleGetProducts();
   }, [filtered]);
 
   useEffect(() => {
@@ -147,17 +150,14 @@ const Products = () => {
   return (
     <div className="page-container">
       <div className="page-header">
-        <div className="page-header-title">Danh sách sản phẩm</div>
-        <div className="page-header-actions">
-          <div className="add-action">
-            <Button
-              variant="contained"
-              onClick={handleNavigateCreateProductPage}
-            >
-              Tạo sản phẩm mới
-            </Button>
-          </div>
+        <div className="page-header-title">
+          Danh sách sản phẩm{" "}
+          {filtered.categoryId &&
+            `"${collections
+              .find((c) => c.value == filtered.categoryId)
+              ?.label.replace("--> ", "")}"`}
         </div>
+
       </div>
       <div className="page-contents">
         <div className="Products">
@@ -182,13 +182,20 @@ const Products = () => {
                 disabled={loading}
                 helperText=""
                 onChange={(event) => {
-                  console.log(event.target.value);
                   if (event.target.value === "visible") {
-                    setFiltered({ ...filtered, isActive: true });
+                    setFiltered({
+                      ...filtered,
+                      currentItem: 0,
+                      isActive: true,
+                    });
                   } else if (event.target.value === "invisible") {
-                    setFiltered({ ...filtered, isActive: false });
+                    setFiltered({
+                      ...filtered,
+                      currentItem: 0,
+                      isActive: false,
+                    });
                   } else if (event.target.value === "default") {
-                    setFiltered({ ...filtered, isActive: "" });
+                    setFiltered({ ...filtered, currentItem: 0, isActive: "" });
                   }
                 }}
               >
@@ -213,10 +220,15 @@ const Products = () => {
                   if (event.target.value !== "default") {
                     setFiltered({
                       ...filtered,
+                      currentItem: 0,
                       categoryId: event.target.value,
                     });
                   } else {
-                    setFiltered(initialFilter);
+                    setFiltered({
+                      ...filtered,
+                      currentItem: 0,
+                      categoryId: "",
+                    });
                   }
                 }}
               >

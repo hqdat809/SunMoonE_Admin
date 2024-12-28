@@ -1,22 +1,23 @@
 import axios, { AxiosResponse } from "axios";
-import { ICollections } from "../interfaces/collection-interface";
+import {
+  ICollections,
+  IGetCollectionRequest,
+} from "../interfaces/collection-interface";
 import { IKiotResponse } from "../interfaces/common";
 import { EAuthToken } from "../interfaces/user-interfaces";
 
-export const getCollections = async () => {
-  const collectionParentId = import.meta.env.VITE_COLLECTION_PARENT_ID;
+export const getCollections = async (payload: IGetCollectionRequest) => {
   try {
-    const response: AxiosResponse<ICollections> = await axios.get(
-      `/kiot/categories/${collectionParentId}`,
-      {
+    const params = new URLSearchParams(payload as Record<string, string>);
+    const response: AxiosResponse<IKiotResponse<ICollections>> =
+      await axios.get(`/kiot/categories?${params}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(
             EAuthToken.KIOT_TOKEN
           )}`,
           Retailer: "thanhthuy1988",
         },
-      }
-    );
+      });
 
     return response.data;
   } catch (error) {

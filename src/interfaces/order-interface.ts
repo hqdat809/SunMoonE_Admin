@@ -33,13 +33,14 @@ export interface IOrderRequest {
   status?: number[]; // Tình trạng đặt hàng
   includePayment?: boolean; // có lấy thông tin thanh toán
   includeOrderDelivery?: boolean;
+  lastCreatedFrom?: any;
   lastModifiedFrom?: any; // thời gian cập nhật
   pageSize?: number; // số items trong 1 trang; mặc định 20 items; tối đa 100 items
   currentItem?: number;
   toDate?: any; //Thời gian cập nhật cho đến thời điểm toDate
   orderBy?: string; //Sắp xếp dữ liệu theo trường orderBy (Ví dụ?: orderBy=name)
   orderDirection?: string; //Sắp xếp kết quả trả về theo?: Tăng dần Asc (Mặc định); giảm dần Desc
-  createdDate?: Date; //Thời gian tạo
+  createdDate?: any; //Thời gian tạo
   saleChannelId?: number; // Id kênh bán hàng, nếu không truyền mặc định kênh khác
 }
 

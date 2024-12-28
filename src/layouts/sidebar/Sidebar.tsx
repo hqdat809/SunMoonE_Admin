@@ -15,7 +15,9 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import * as RoutePath from "../../routes/paths";
 import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
 import FolderZipRoundedIcon from "@mui/icons-material/FolderZipRounded";
-
+import ReceiptRoundedIcon from "@mui/icons-material/ReceiptRounded";
+import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 interface ISidebarEl {
   name: string;
   src?: string;
@@ -49,6 +51,11 @@ const varSidebarElements: ISidebarEl[] = [
         icon: ShoppingCartIcon,
         route: RoutePath.ORDERS,
       },
+      {
+        name: "Danh sách hóa đơn",
+        icon: ReceiptRoundedIcon,
+        route: RoutePath.INVOICES,
+      },
     ],
   },
   {
@@ -57,9 +64,14 @@ const varSidebarElements: ISidebarEl[] = [
     src: storeIcon.customerIcon,
     children: [
       {
-        name: "Danh sách khách hàng",
+        name: "Khách hàng KiotViet",
         route: RoutePath.CUSTOMERS,
         icon: RecentActorsIcon,
+      },
+      {
+        name: "Khách hàng website",
+        route: RoutePath.USER,
+        icon: AccountBoxIcon,
       },
     ],
   },
@@ -100,14 +112,12 @@ const Sidebar = ({ isExpand, setIsExpand }: ISidebarProps) => {
   );
 
   useEffect(() => {
-    console.log(isExpand);
     setTimeout(() => {
       setIsCollapsed(!isExpand);
     }, 700);
   }, [isExpand]);
 
   useEffect(() => {
-    console.log(location.pathname);
     setActiveEl(
       varSidebarElements.find((el) => {
         return el?.children?.find(
@@ -127,9 +137,8 @@ const Sidebar = ({ isExpand, setIsExpand }: ISidebarProps) => {
       <div className="Sidebar__logo">
         <Avatar alt="logo" src={logo} sx={{ width: 30, height: 30 }} />
         <div
-          className={`Sidebar__shopName ${isCollapsed && "displayNone"} ${
-            isExpand && "display"
-          }`}
+          className={`Sidebar__shopName ${isCollapsed && "displayNone"} ${isExpand && "display"
+            }`}
         >
           SunMoonE
         </div>
@@ -138,10 +147,9 @@ const Sidebar = ({ isExpand, setIsExpand }: ISidebarProps) => {
         <div className="Sidebar__narrow">
           {varSidebarElements.map((el) => (
             <div
-              className={`Sidebar__el ${
-                (hoverEl?.name === el.name || activeEl?.name === el.name) &&
+              className={`Sidebar__el ${(hoverEl?.name === el.name || activeEl?.name === el.name) &&
                 "active"
-              }`}
+                }`}
               onClick={() => {
                 el.children &&
                   el.children[0].route &&
@@ -166,17 +174,15 @@ const Sidebar = ({ isExpand, setIsExpand }: ISidebarProps) => {
           ))}
         </div>
         <div
-          className={`Sidebar__expand ${isExpand ? "expanded" : "collapsed"} ${
-            isCollapsed && "displayNone"
-          } ${isExpand && "display"}`}
+          className={`Sidebar__expand ${isExpand ? "expanded" : "collapsed"} ${isCollapsed && "displayNone"
+            } ${isExpand && "display"}`}
           onMouseLeave={() => {
             setHoverEl(undefined);
           }}
         >
           <div
-            className={`Sidebar__expand-title ${isCollapsed && "displayNone"} ${
-              isExpand && "display"
-            }`}
+            className={`Sidebar__expand-title ${isCollapsed && "displayNone"} ${isExpand && "display"
+              }`}
           >
             {hoverEl?.title || activeEl?.title}
           </div>
@@ -184,20 +190,18 @@ const Sidebar = ({ isExpand, setIsExpand }: ISidebarProps) => {
           <div className="Sidebar__list-children">
             {hoverEl?.children?.map((item) => (
               <div
-                className={`Sidebar__item ${
-                  item.route &&
+                className={`Sidebar__item ${item.route &&
                   location.pathname.includes(item.route) &&
                   "active"
-                }`}
+                  }`}
                 onClick={() => {
                   setActiveEl(hoverEl);
                   item.route && navigate(item.route);
                 }}
               >
                 <div
-                  className={`Sidebar__item-icon ${
-                    isCollapsed && "displayNone"
-                  } ${isExpand && "display"}`}
+                  className={`Sidebar__item-icon ${isCollapsed && "displayNone"
+                    } ${isExpand && "display"}`}
                 >
                   <Icon component={item.icon} sx={{ width: 20, height: 20 }} />
                 </div>
@@ -206,17 +210,15 @@ const Sidebar = ({ isExpand, setIsExpand }: ISidebarProps) => {
             )) ||
               activeEl?.children?.map((item) => (
                 <div
-                  className={`Sidebar__item ${
-                    item.route &&
+                  className={`Sidebar__item ${item.route &&
                     location.pathname.includes(item.route) &&
                     "active"
-                  }`}
+                    }`}
                   onClick={() => item.route && navigate(item.route)}
                 >
                   <div
-                    className={`Sidebar__item-icon ${
-                      isCollapsed && "displayNone"
-                    } ${isExpand && "display"}`}
+                    className={`Sidebar__item-icon ${isCollapsed && "displayNone"
+                      } ${isExpand && "display"}`}
                   >
                     <Icon
                       component={item.icon}

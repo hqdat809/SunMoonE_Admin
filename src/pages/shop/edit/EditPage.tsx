@@ -27,7 +27,6 @@ const EditPage = () => {
   });
 
   const handleSubmitShop = (values: any) => {
-    console.log("Submit form", values);
     if (shop?.id) {
       editShopInfo(shop.id, values, () => {
         window.location.reload();

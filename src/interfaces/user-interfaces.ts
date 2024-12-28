@@ -64,19 +64,36 @@ export interface Role {
   name: string;
 }
 
+export enum RoleEnum {
+  ADMIN = "ADMIN",
+  USER = "USER",
+  CTV1 = "CTV1",
+  CTV2 = "CTV2",
+  CTV3 = "CTV3",
+}
+
 export interface IUserData {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   address: string;
   email: string;
-  role: Role;
+  role: RoleEnum;
   enabled: boolean;
+  customerId: string;
   username: string;
+  userBank: IUserBank;
   accountNonLocked: boolean;
   authorities: Authority[];
   credentialsNonExpired: boolean;
   accountNonExpired: boolean;
+}
+
+export interface IUserBank {
+  id: string;
+  bankName: string;
+  bankId: string;
+  fullName: string;
 }
 
 export interface Authority {
