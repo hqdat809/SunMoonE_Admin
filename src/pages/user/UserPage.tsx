@@ -36,6 +36,7 @@ const Customers = () => {
 
     const handleUpdateUserRole = async (userId: string, userRole: RoleEnum) => {
         try {
+            console.log(userRole)
             await UserService.updateUserRole(userId, userRole)
             toastSuccess("Cập nhật hạng người dùng thành công")
             await handleGetCustomer()

@@ -29,3 +29,20 @@ export const updateUserRole = async (
 
     return response;
 };
+
+
+export const updateChangePassword = async (
+    userId: string,
+    payload: string,
+    cb?: () => void
+) => {
+    const response: AxiosResponse<IUserData> = await ApiClient.put(
+        `/api/v1/user/update-password/${userId}?password=${payload}`
+    );
+
+    if (response.status === 200) {
+        cb?.();
+    }
+
+    return response;
+};

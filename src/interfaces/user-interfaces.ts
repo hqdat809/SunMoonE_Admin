@@ -67,6 +67,7 @@ export interface Role {
 export enum RoleEnum {
   ADMIN = "ADMIN",
   USER = "USER",
+  Customer = "Customer",
   CTV1 = "CTV1",
   CTV2 = "CTV2",
   CTV3 = "CTV3",
@@ -82,6 +83,7 @@ export interface IUserData {
   enabled: boolean;
   customerId: string;
   username: string;
+  phone: string;
   userBank: IUserBank;
   accountNonLocked: boolean;
   authorities: Authority[];

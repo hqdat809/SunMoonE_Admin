@@ -10,6 +10,7 @@ import CategoryCustomer from "../../pages/product/categoryCustomer/CategoryCusto
 import CollectionNameColumn from "../../pages/product/collection/name-column/CollectionNameColumn";
 import { formatDate } from "../../utils/date-utils";
 import "./Table.scss";
+import { UserActionsColumn } from "../../pages/user/UserActionsColumn";
 
 export const productColumns: GridColDef[] = [
   {
@@ -173,16 +174,6 @@ export const customerColumns: GridColDef[] = [
 export const userColumns: (updateRole: (userId: string, userRole: RoleEnum) => void, openDialog: (bankDetail: IUserBank) => void) => GridColDef[] = (updateRole, openDialog) => (
   [
     {
-      field: "id",
-      headerName: "ID",
-      flex: 2,
-      disableColumnMenu: true,
-      sortable: false,
-      renderCell: (params: GridRenderCellParams<IUserData>) => (
-        <div className="customer-id">{params.row?.id}</div>
-      ),
-    },
-    {
       field: "name",
       headerName: "TÊN",
       flex: 1,
@@ -190,6 +181,26 @@ export const userColumns: (updateRole: (userId: string, userRole: RoleEnum) => v
       sortable: false,
       renderCell: (params: GridRenderCellParams<IUserData>) => (
         <div className="customer-name">{`${params.row?.firstName} ${params.row?.lastName}`}</div>
+      ),
+    },
+    {
+      field: "customerId",
+      headerName: "Mã KH",
+      flex: 1,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams<IUserData>) => (
+        <div className="customer-id">{`${params.row?.customerId}`}</div>
+      ),
+    },
+    {
+      field: "phoneNumber",
+      headerName: "SĐT",
+      flex: 1,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams<IUserData>) => (
+        <div className="customer-id">{`${params.row?.phone}`}</div>
       ),
     },
     {
@@ -239,6 +250,14 @@ export const userColumns: (updateRole: (userId: string, userRole: RoleEnum) => v
         }
 
         return <Chip label="Nhấn để mở" color="success" style={{ cursor: "pointer" }} onClick={() => openDialog(bank)} />
+      }
+    },
+    {
+      field: "actions",
+      headerName: "",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<IUserData>) => {
+        return <UserActionsColumn userId={params.row?.id} />
       }
     },
   ])
