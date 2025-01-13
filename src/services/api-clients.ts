@@ -30,7 +30,7 @@ const requestHandler = (config: any) => {
   return config;
 };
 
-// let isRefreshing = false;
+let isRefreshing = false;
 
 const refreshAccessToken = async () => {
   try {
@@ -65,23 +65,23 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
 
     // If response status is 401 (Unauthorized) and we haven't already started token refresh
-    // if (error?.response?.status === 403 && !isRefreshing) {
-    //   isRefreshing = true;
+    if (error?.response?.status === 403 && !isRefreshing) {
+      isRefreshing = true;
 
-    //   const newAccessToken = await refreshAccessToken();
-    //   localStorage.setItem(EAuthToken.ACCESS_TOKEN, newAccessToken.token);
-    //   localStorage.setItem(
-    //     EAuthToken.REFRESH_TOKEN,
-    //     newAccessToken.refreshToken
-    //   );
+      const newAccessToken = await refreshAccessToken();
+      localStorage.setItem(EAuthToken.ACCESS_TOKEN, newAccessToken.token);
+      localStorage.setItem(
+        EAuthToken.REFRESH_TOKEN,
+        newAccessToken.refreshToken
+      );
 
-    //   // Update the Authorization header for the original request
-    //   originalRequest.headers.Authorization = `Bearer ${newAccessToken.token}`;
+      // Update the Authorization header for the original request
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken.token}`;
 
-    //   isRefreshing = false;
-    //   // Retry the original request
-    //   return instance(originalRequest);
-    // }
+      isRefreshing = false;
+      // Retry the original request
+      return instance(originalRequest);
+    }
 
     // if (message) throw new Error(message);
 

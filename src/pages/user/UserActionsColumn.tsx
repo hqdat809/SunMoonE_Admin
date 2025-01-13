@@ -1,14 +1,14 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Input, TextField } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import * as React from 'react';
 import { updateChangePassword } from '../../services/user-service';
 import { toastError, toastSuccess } from '../../utils/notifications-utils';
 
